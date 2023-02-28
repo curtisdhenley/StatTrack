@@ -8,7 +8,8 @@ namespace StatTracker.Models
         public int Id { get; set; }
 
         [Required]
-        public string Comment { get; set; }
+        [StringLength(500, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Comment { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
@@ -17,7 +18,7 @@ namespace StatTracker.Models
         public int TicketId { get; set; }
 
         // Foreign Key
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         // Navigation Properties
         public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();

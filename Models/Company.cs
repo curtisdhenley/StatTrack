@@ -9,9 +9,12 @@ namespace StatTracker.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        [Display(Name = "Company Name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Name { get; set; }
 
-        public string Description { get; set; }
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Description { get; set; }
 
         // Image Properties
         public byte[]? ImageData { get; set; }

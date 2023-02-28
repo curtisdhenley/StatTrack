@@ -29,15 +29,23 @@ namespace StatTracker.Models
         public string? InviteeId { get; set; }
 
         [Required]
-        public string InviteeEmail { get; set; }
+        [Display(Name = "Recipient Email")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? InviteeEmail { get; set; }
 
         [Required]
-        public string InviteeFirstName { get; set; }
+        [Display(Name = "Recipient First Name")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? InviteeFirstName { get; set; }
 
         [Required]
-        public string InviteeLastName { get; set; }
+        [Display(Name = "Recipient Last Name")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? InviteeLastName { get; set; }
 
-        public string Message { get; set; }
+        [Display(Name = "Message")]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Message { get; set; }
 
         public bool IsValid { get; set; }
 

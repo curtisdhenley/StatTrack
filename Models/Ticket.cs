@@ -8,10 +8,13 @@ namespace StatTracker.Models
         public int Id { get; set; }
 
         [Required]
-        public string Title { get; set; }
+        [Display(Name = "Title")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Title { get; set; }
 
         [Required]
-        public string Description { get; set; }
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        public string? Description { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
@@ -36,11 +39,11 @@ namespace StatTracker.Models
         public int TicketPriorityId { get; set; }
 
         // Foreign Key
-        public string DeveloperUserId { get; set; }
+        public string? DeveloperUserId { get; set; }
 
         // Foreign Key
         [Required]
-        public string SubmitterUserId { get; set; }
+        public string? SubmitterUserId { get; set; }
 
         // Navigation Properties
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
