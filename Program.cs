@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StatTracker.Data;
 using StatTracker.Models;
+using Techture.Services;
+using Techture.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +16,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<BTUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddDefaultUI()
+    .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews();
+// Custom Services
+builder.Services.AddScoped<IBTFileService, BTFileService>();
+
+builder.Services.AddMvc();
+
+//builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
