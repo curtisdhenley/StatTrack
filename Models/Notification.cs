@@ -15,11 +15,9 @@ namespace StatTracker.Models
         public int TicketId { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? Title { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? Message { get; set; }
 
         [DataType(DataType.Date)]
@@ -38,14 +36,14 @@ namespace StatTracker.Models
         public bool HasBeenViewed { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<NotificationType?> NotificationType { get; set; } = new HashSet<NotificationType?>();
+        public virtual NotificationType? NotificationType { get; set; }
 
-        public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
+        public virtual Ticket? Ticket { get; set; }
 
-        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public virtual Project? Project { get; set; }
 
-        public virtual ICollection<BTUser> Senders { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? Sender { get; set; }
 
-        public virtual ICollection<BTUser> Recipients { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? Recipient { get; set; }
     }
 }

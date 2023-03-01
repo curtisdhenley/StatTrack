@@ -30,7 +30,6 @@ namespace StatTracker.Models
 
         [Required]
         [Display(Name = "Recipient Email")]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? InviteeEmail { get; set; }
 
         [Required]
@@ -50,12 +49,12 @@ namespace StatTracker.Models
         public bool IsValid { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Company> Companies { get; set; } = new HashSet<Company>();
+        public virtual Company? Company { get; set; }
 
-        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public virtual Project? Project { get; set; }
 
-        public virtual ICollection<BTUser> Invitors { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? Invitor { get; set; }
 
-        public virtual ICollection<BTUser> Invitee { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? Invitee { get; set; }
     }
 }

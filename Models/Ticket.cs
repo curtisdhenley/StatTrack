@@ -9,11 +9,10 @@ namespace StatTracker.Models
 
         [Required]
         [Display(Name = "Title")]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? Title { get; set; }
 
         [Required]
-        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? Description { get; set; }
 
         [DataType(DataType.Date)]
@@ -46,22 +45,22 @@ namespace StatTracker.Models
         public string? SubmitterUserId { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public virtual Project? Project { get; set; }
 
-        public virtual ICollection<TicketPriority> TicketPriorities { get; set; } = new HashSet<TicketPriority>();
+        public virtual TicketPriority? TicketPriority { get; set; }
 
-        public virtual ICollection<TicketType> TicketTypes { get; set; } = new HashSet<TicketType>();
+        public virtual TicketType? TicketType { get; set; }
 
-        public virtual ICollection<TicketStatus> TicketStatuses { get; set; } = new HashSet<TicketStatus>();
+        public virtual TicketStatus? TicketStatus { get; set; }
 
-        public virtual ICollection<BTUser> DeveloperUser { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? DeveloperUser { get; set; }
 
-        public virtual ICollection<BTUser> SubmitterUser { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? SubmitterUser { get; set; }
 
         public virtual ICollection<TicketComment> Comments { get; set; } = new HashSet<TicketComment>();
 
         public virtual ICollection<TicketAttachment> Attachments { get; set; } = new HashSet<TicketAttachment>();
 
-        public virtual ICollection<TicketHistory> History { get; set; } = new HashSet<TicketHistory>();
+        public virtual TicketHistory? History { get; set; }
     }
 }

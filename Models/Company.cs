@@ -17,12 +17,12 @@ namespace StatTracker.Models
         public string? Description { get; set; }
 
         // Image Properties
-        public byte[]? ImageData { get; set; }
+        public byte[]? ImageFileData { get; set; }
 
-        public string? ImageType { get; set; }
+        public string? ImageFileType { get; set; }
 
         [NotMapped]
-        public virtual IFormFile? ImageFile { get; set; }
+        public virtual IFormFile? ImageFormFile { get; set; }
 
         // Navigation Properties
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();

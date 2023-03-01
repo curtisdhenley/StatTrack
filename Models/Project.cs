@@ -32,19 +32,19 @@ namespace StatTracker.Models
         public int ProjectPriorityId { get; set; }
 
         // Image Properties
-        public byte[]? ImageData { get; set; }
+        public byte[]? ImageFileData { get; set; }
 
-        public string? ImageType { get; set; }
+        public string? ImageFileType { get; set; }
 
         [NotMapped]
-        public virtual IFormFile? ImageFile { get; set; }
+        public virtual IFormFile? ImageFormFile { get; set; }
 
         public bool Archived { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Company> Companies { get; set; } = new HashSet<Company>();
+        public virtual Company? Company { get; set; }
 
-        public virtual ICollection<ProjectPriority> ProjectPriorities { get; set; } = new HashSet<ProjectPriority>();
+        public virtual ProjectPriority? ProjectPriority { get; set; }
 
         public virtual ICollection<BTUser> Members { get; set; } = new HashSet<BTUser>();
 

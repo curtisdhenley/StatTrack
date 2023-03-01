@@ -18,11 +18,12 @@ namespace StatTracker.Models
         public int TicketId { get; set; }
 
         // Foreign Key
+        [Required]
         public string? UserId { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
+        public virtual Ticket? Ticket { get; set; }
 
-        public virtual ICollection<BTUser> User { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? BTUser { get; set; }
     }
 }

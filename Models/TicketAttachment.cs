@@ -21,17 +21,17 @@ namespace StatTracker.Models
         [Required]
         public string? BTUserId { get; set; }
 
-        // Image Properties
-        public byte[]? ImageData { get; set; }
+        // Attchment Properties
+        public byte[]? FileData { get; set; }
 
-        public string? ImageType { get; set; }
+        public string? FileType { get; set; }
 
         [NotMapped]
-        public virtual IFormFile? ImageFile { get; set; }
+        public virtual IFormFile? FormFile { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Ticket> Tickets { get; set; } = new HashSet<Ticket>();
+        public virtual Ticket? Ticket { get; set; }
 
-        public virtual ICollection<BTUser> User { get; set; } = new HashSet<BTUser>();
+        public virtual BTUser? BTUser { get; set; }
     }
 }
