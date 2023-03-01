@@ -17,7 +17,7 @@ namespace StatTracker.Models
         public string? Name { get; set; }
 
         [Required]
-        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+        [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
         public string? Description { get; set; }
 
         [DataType(DataType.Date)]
