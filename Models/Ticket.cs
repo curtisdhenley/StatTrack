@@ -61,6 +61,6 @@ namespace StatTracker.Models
 
         public virtual ICollection<TicketAttachment> Attachments { get; set; } = new HashSet<TicketAttachment>();
 
-        public virtual TicketHistory? History { get; set; }
+        public virtual ICollection<TicketHistory> History { get; set; } = new HashSet<TicketHistory>();
     }
 }

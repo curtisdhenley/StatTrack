@@ -31,7 +31,7 @@ namespace StatTracker.Models
         public int CompanyId { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<Company> Companies { get; set; } = new HashSet<Company>();
+        public virtual Company? Company { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
     }
