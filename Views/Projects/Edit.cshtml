@@ -1,5 +1,10 @@
 ﻿@model StatTracker.Models.Project
 
+@using StatTracker.Services.Interfaces
+@using StatTracker.Models.Enums
+
+@inject IBTFileService _btFileService
+
 @{
     ViewData["Title"] = "Edit";
 }
@@ -10,13 +15,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="CompanyId" class="control-label"></label>
                 <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -28,11 +32,11 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
+            @*<div class="form-group">
+            <label asp-for="Created" class="control-label"></label>
+            <input asp-for="Created" class="form-control" />
+            <span asp-validation-for="Created" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
                 <input asp-for="StartDate" class="form-control" />
@@ -46,17 +50,22 @@
             <div class="form-group">
                 <label asp-for="ProjectPriorityId" class="control-label"></label>
                 <select asp-for="ProjectPriorityId" class="form-control" asp-items="ViewBag.ProjectPriorityId"></select>
-                <span asp-validation-for="ProjectPriorityId" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+            <label asp-for="ImageFileData" class="control-label"></label>
+            <input asp-for="ImageFileData" class="form-control" />
+            <span asp-validation-for="ImageFileData" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageFileData" class="control-label"></label>
-                <input asp-for="ImageFileData" class="form-control" />
-                <span asp-validation-for="ImageFileData" class="text-danger"></span>
-            </div>
+            <label asp-for="ImageFileType" class="control-label"></label>
+            <input asp-for="ImageFileType" class="form-control" />
+            <span asp-validation-for="ImageFileType" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
-                <label asp-for="ImageFileType" class="control-label"></label>
-                <input asp-for="ImageFileType" class="form-control" />
-                <span asp-validation-for="ImageFileType" class="text-danger"></span>
+                <label asp-for="ImageFormFile" class="control-label">Project Image</label>
+                <img class="img-fluid border rounded-3 m-2" style="max-height: 250px;" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.ProjectImage)" alt="Project Images" id="projectImage">
+                <input asp-for="ImageFormFile" type="file" class="form-control mt-3 pt-2" accept=".png,.jpg,.jpeg,.gif"
+                       onchange="document.getElementById('projectImage').src = window.URL.createObjectURL(this.files[0])" />
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

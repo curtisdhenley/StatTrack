@@ -22,8 +22,10 @@ namespace StatTracker.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            return View(await applicationDbContext.ToListAsync());
+            IEnumerable<Ticket> tickets = await _context.Tickets.Where(t => t.Archived == false).ToListAsync();
+
+            //var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            return View(tickets);
         }
 
         // GET: Tickets/Details/5
@@ -71,6 +73,7 @@ namespace StatTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+                ticket.Created = DataUtility.GetPostGresDate(DateTime.UtcNow);
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -122,6 +125,13 @@ namespace StatTracker.Controllers
             {
                 try
                 {
+                    ticket.Created = DataUtility.GetPostGresDate(ticket.Created);
+
+                    if (ticket.Updated != null)
+                    {
+                        ticket.Updated = DataUtility.GetPostGresDate(DateTime.UtcNow);
+                    }
+
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();
                 }
@@ -180,10 +190,11 @@ namespace StatTracker.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Ticket'  is null.");
             }
-            var ticket = await _context.Tickets.FindAsync(id);
+            Ticket? ticket = await _context.Tickets.FindAsync(id);
             if (ticket != null)
             {
-                _context.Tickets.Remove(ticket);
+                ticket.Archived = true;
+                _context.Tickets.Update(ticket);
             }
             
             await _context.SaveChangesAsync();

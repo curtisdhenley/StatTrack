@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<StatTracker.Models.Project>
 
+@using StatTracker.Services.Interfaces
+@using StatTracker.Models.Enums
+
+@inject IBTFileService _btFileService
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -27,12 +32,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.ImageFileData)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ImageFileType)
             </th>
+            <th>
+                Project Image
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Archived)
             </th>
@@ -63,12 +71,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ImageFileData)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ImageFileType)
             </td>
+            <td>
+                    <img class="img-fluid border rounded-3 m-2" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.ProjectImage)" alt="Project Images" id="projectImage">
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Archived)
             </td>

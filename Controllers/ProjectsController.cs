@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using StatTracker.Data;
 using StatTracker.Models;
+using StatTracker.Services.Interfaces;
 
 namespace StatTracker.Controllers
 {
@@ -16,18 +17,23 @@ namespace StatTracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
+        private readonly IBTFileService _btFileService;
 
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService)
         {
             _context = context;
             _userManager = userManager;
+            _btFileService = btFileService;
         }
 
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
-            return View(await applicationDbContext.ToListAsync());
+            IEnumerable<Project> projects = await _context.Projects.Where(p => p.Archived == false).ToListAsync();
+
+
+            //var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
+            return View(projects);
         }
 
         // GET: Projects/Details/5
@@ -55,7 +61,11 @@ namespace StatTracker.Controllers
         {
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id");
-            return View();
+
+            Project project = new Project();
+            project.StartDate = DataUtility.GetPostGresDate(DateTime.UtcNow);
+            project.EndDate = DataUtility.GetPostGresDate(DateTime.UtcNow);
+            return View(project);
         }
 
         // POST: Projects/Create
@@ -63,20 +73,32 @@ namespace StatTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,ImageFileData,ImageFileType,Archived")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,ImageFormFile,Archived")] Project project)
         {
-            ModelState.Remove("CompanyId");
+            //ModelState.Remove("CompanyId");
 
             if (ModelState.IsValid)
             {
                 // display information based on company
                 //project.CompanyId = _userManager.GetUserId(User);
+
+                project.Created = DataUtility.GetPostGresDate(DateTime.UtcNow);
+                project.StartDate = DataUtility.GetPostGresDate(project.StartDate);
+                project.EndDate = DataUtility.GetPostGresDate(project.EndDate);
+
+                // image service
+                if (project.ImageFormFile != null)
+                {
+                    project.ImageFileData = await _btFileService.ConvertFileToByteArrayAsync(project.ImageFormFile);
+                    project.ImageFileType = project.ImageFormFile.ContentType;
+                }
+
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
+            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
 
@@ -103,7 +125,7 @@ namespace StatTracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,ImageFileData,ImageFileType,Archived")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,ImageFormFile,Archived")] Project project)
         {
             if (id != project.Id)
             {
@@ -114,6 +136,17 @@ namespace StatTracker.Controllers
             {
                 try
                 {
+                    project.Created = DataUtility.GetPostGresDate(project.Created);
+                    project.StartDate = DataUtility.GetPostGresDate(project.StartDate);
+                    project.EndDate = DataUtility.GetPostGresDate(project.EndDate);
+
+                    // image service
+                    if (project.ImageFormFile != null)
+                    {
+                        project.ImageFileData = await _btFileService.ConvertFileToByteArrayAsync(project.ImageFormFile);
+                        project.ImageFileType = project.ImageFormFile.ContentType;
+                    }
+
                     _context.Update(project);
                     await _context.SaveChangesAsync();
                 }
@@ -131,7 +164,7 @@ namespace StatTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
+            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
 
@@ -164,10 +197,11 @@ namespace StatTracker.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
-            var project = await _context.Projects.FindAsync(id);
+            Project? project = await _context.Projects.FindAsync(id);
             if (project != null)
             {
-                _context.Projects.Remove(project);
+                project.Archived = true;
+                _context.Projects.Update(project);
             }
             
             await _context.SaveChangesAsync();

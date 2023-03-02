@@ -1,5 +1,10 @@
 ﻿@model StatTracker.Models.Project
 
+@using StatTracker.Services.Interfaces
+@using StatTracker.Models.Enums
+
+@inject IBTFileService _btFileService
+
 @{
     ViewData["Title"] = "Details";
 }
@@ -40,17 +45,17 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ImageFileData)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ImageFileData)
-        </dd>
+        </dd>*@
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFileType)
+            Project Image
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFileType)
+            <img class="img-fluid border rounded-3 m-2" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.ProjectImage)" alt="Project Images" id="projectImage">
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Archived)

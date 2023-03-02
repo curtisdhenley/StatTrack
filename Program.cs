@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StatTracker.Data;
 using StatTracker.Models;
-using Techture.Services;
-using Techture.Services.Interfaces;
+using StatTracker.Services;
+using StatTracker.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

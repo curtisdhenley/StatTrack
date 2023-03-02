@@ -1,4 +1,4 @@
-﻿namespace Techture.Services.Interfaces
+﻿namespace StatTracker.Services.Interfaces
 {
     public interface IBTFileService
     {

@@ -1,6 +1,6 @@
-﻿using Techture.Services.Interfaces;
+﻿using StatTracker.Services.Interfaces;
 
-namespace Techture.Services
+namespace StatTracker.Services
 {
     public class BTFileService : IBTFileService
     {
