@@ -18,6 +18,11 @@ namespace StatTracker.Controllers
             return View();
         }
 
+        public IActionResult AdmintoIndex()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
