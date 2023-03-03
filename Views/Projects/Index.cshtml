@@ -120,18 +120,6 @@
     </div>
 </div>
 
-@*<!-- MODAL -->
-<div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Modal Content is Responsive</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <partial name="Create" />
-        </div>
-    </div>
-</div><!-- /.modal -->*@
 @section Scripts {
     <!-- third party js -->
     <script src="~/Adminto_Template/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -152,73 +140,3 @@
     <script src="~/Adminto_Template/dist/assets/js/pages/datatables.init.js"></script>
 }
 
-@*<form asp-action="Create" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="modal-body">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3 form-group">
-                    <label asp-for="CompanyId" class="control-label"></label>
-                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3 form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3 form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="mb-3 form-group">
-                    <label asp-for="StartDate" class="control-label"></label>
-                    <input asp-for="StartDate" class="form-control" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3 form-group">
-                    <label asp-for="EndDate" class="control-label"></label>
-                    <input asp-for="EndDate" class="form-control" />
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3 form-group">
-                    <label asp-for="ProjectPriorityId" class="control-label"></label>
-                    <select asp-for="ProjectPriorityId" class="form-control" asp-items="ViewBag.ProjectPriorityId"></select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3 form-group">
-                    <label asp-for="ImageFormFile" class="control-label">Project Image</label>
-                    <img class="img-fluid border rounded-3 m-2" style="max-height: 250px;" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.ProjectImage)" alt="Project Images" id="projectImage">
-                    <input asp-for="ImageFormFile" type="file" class="form-control mt-3 pt-2" accept=".png,.jpg,.jpeg,.gif"
-                           onchange="document.getElementById('projectImage').src = window.URL.createObjectURL(this.files[0])" />
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3 form-group">
-                    <label class="form-check-label">
-                        <input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary waves-effect form-group" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-info waves-effect waves-light form-group">Create</button>
-    </div>
-</form>*@
