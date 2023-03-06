@@ -12,7 +12,7 @@ using StatTracker.Data;
 using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services.Interfaces;
-using Techture.Data;
+using StatTracker.Data;
 
 namespace StatTracker.Controllers
 {

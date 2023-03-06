@@ -11,7 +11,7 @@ using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services;
 using StatTracker.Services.Interfaces;
-using Techture.Data;
+using StatTracker.Data;
 using System.IO;
 
 namespace StatTracker.Controllers

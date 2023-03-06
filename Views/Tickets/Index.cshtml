@@ -14,62 +14,64 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<div class="col-md-4">
+<div class="row">
     @foreach (var item in Model)
     {
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">
-                    @Html.DisplayFor(modelItem => item.Title)
-                </h4>
-                <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.Description)
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </h4>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </p>
+                    @*<p class="card-text">
+                @Html.DisplayFor(modelItem => item.Archived)
                 </p>
-                @*<p class="card-text">
-                    @Html.DisplayFor(modelItem => item.Archived)
-                </p>
                 <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.ArchivedByProject)
+                @Html.DisplayFor(modelItem => item.ArchivedByProject)
                 </p>*@
-                <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.Project.Description)
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.Project!.Description)
+                    </p>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.TicketPriority!.Id)
+                    </p>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.TicketType!.Id)
+                    </p>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.TicketStatus!.Id)
+                    </p>
+                    @*<p class="card-text">
+                @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
                 </p>
                 <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.TicketPriority.Id)
-                </p>
-                <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.TicketType.Id)
-                </p>
-                <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.TicketStatus.Id)
-                </p>
-                @*<p class="card-text">
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
-                </p>
-                <p class="card-text">
-                    @Html.DisplayFor(modelItem => item.SubmitterUser.Id)
+                @Html.DisplayFor(modelItem => item.SubmitterUser.Id)
                 </p>*@
-                <p class="card-text">
-                    <small class="text-muted">
-                        Created: @Html.DisplayFor(modelItem => item.Created)
-                    </small>
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Last Updated: @Html.DisplayFor(modelItem => item.Updated)
-                    </small>
-                </p>
-            </div>
-            <div class="card-footer">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
-                    <i class="bi bi-pencil-fill"></i>
-                </a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded-pill waves-effect waves-light">
-                    <i class="bi bi-info-circle-fill"></i>
-                </a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
-                    <i class="bi bi-trash-fill"></i>
-                </a>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Created: @Html.DisplayFor(modelItem => item.Created)
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Last Updated: @Html.DisplayFor(modelItem => item.Updated)
+                        </small>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded-pill waves-effect waves-light">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </div>
             </div>
         </div>
     }
