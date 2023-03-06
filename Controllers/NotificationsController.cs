@@ -49,7 +49,7 @@ namespace StatTracker.Controllers
             return View(notification);
         }
 
-        // GET: Notifications/Create
+        // GET: Notifications/AddTicketComment
         public IActionResult Create()
         {
             ViewData["NotificationTypeId"] = new SelectList(_context.Set<NotificationType>(), "Id", "Id");
@@ -60,7 +60,7 @@ namespace StatTracker.Controllers
             return View();
         }
 
-        // POST: Notifications/Create
+        // POST: Notifications/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

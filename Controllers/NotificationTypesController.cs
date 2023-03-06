@@ -45,13 +45,13 @@ namespace StatTracker.Controllers
             return View(notificationType);
         }
 
-        // GET: NotificationTypes/Create
+        // GET: NotificationTypes/AddTicketComment
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: NotificationTypes/Create
+        // POST: NotificationTypes/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

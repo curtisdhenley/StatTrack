@@ -12,6 +12,7 @@ using StatTracker.Data;
 using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services.Interfaces;
+using Techture.Data;
 
 namespace StatTracker.Controllers
 {
@@ -21,9 +22,9 @@ namespace StatTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTFileService _btFileService;
-        private readonly IProjectService _projectService;
+        private readonly IBTProjectService _projectService;
 
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IProjectService projectService)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IBTProjectService projectService)
         {
             _context = context;
             _userManager = userManager;
@@ -36,11 +37,7 @@ namespace StatTracker.Controllers
         {
             int companyId = User.Identity!.GetCompanyId();
 
-            IEnumerable<Project> projects = await _context.Projects
-                                                          .Where(p => p.Archived == false && p.CompanyId == companyId)
-                                                          .Include(p => p.Members)
-                                                          .Include(p => p.Tickets)
-                                                          .ToListAsync();
+            IEnumerable<Project> projects = await _projectService.GetProjectsAsync(companyId);
 
             return View(projects);
         }
@@ -66,11 +63,11 @@ namespace StatTracker.Controllers
             return View(project);
         }
 
-        // GET: Projects/Create
-        public IActionResult Create()
+        // GET: Projects/AddTicketComment
+        public async Task<IActionResult> Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id");
+            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name");
+            ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Id");
 
             Project project = new Project();
             project.StartDate = DataUtility.GetPostGresDate(DateTime.UtcNow);
@@ -78,7 +75,7 @@ namespace StatTracker.Controllers
             return View(project);
         }
 
-        // POST: Projects/Create
+        // POST: Projects/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -107,8 +104,8 @@ namespace StatTracker.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
+            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
+            ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
 
@@ -125,8 +122,8 @@ namespace StatTracker.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
+            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
+            ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
 
@@ -185,7 +182,9 @@ namespace StatTracker.Controllers
                 return NotFound();
             }
 
-            Project project = await _projectService.GetProjectAsync(id.Value);
+            int companyId = User.Identity!.GetCompanyId();
+
+            Project project = await _projectService.GetProjectAsync(id.Value, companyId);
 
             if (project == null)
             {
@@ -200,12 +199,14 @@ namespace StatTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_projectService.GetProjectAsync(id) == null)
+            int companyId = User.Identity!.GetCompanyId();
+
+            if (_projectService.GetProjectAsync(id, companyId) == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
 
-            Project? project = await _projectService.GetProjectAsync(id);
+            Project? project = await _projectService.GetProjectAsync(id, companyId);
 
             await _projectService.ArchiveProjectAsync(project);
 

@@ -45,13 +45,13 @@ namespace StatTracker.Controllers
             return View(ticketStatus);
         }
 
-        // GET: TicketStatus/Create
+        // GET: TicketStatus/AddTicketComment
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TicketStatus/Create
+        // POST: TicketStatus/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

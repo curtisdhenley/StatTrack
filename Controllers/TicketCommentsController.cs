@@ -45,14 +45,14 @@ namespace StatTracker.Controllers
             return View(ticketComment);
         }
 
-        // GET: TicketComments/Create
+        // GET: TicketComments/AddTicketComment
         public IActionResult Create()
         {
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description");
             return View();
         }
 
-        // POST: TicketComments/Create
+        // POST: TicketComments/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

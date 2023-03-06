@@ -2,7 +2,7 @@
 
 namespace StatTracker.Services.Interfaces
 {
-    public interface IProjectService
+    public interface IBTProjectService
     {
         #region CRUD Methods
         // CRUD Services
@@ -13,7 +13,7 @@ namespace StatTracker.Services.Interfaces
         // UpdateProjectAsync(Project project)
         public Task UpdateProjectAsync(Project project);
 
-        // GetProjectAsync(int projectId)
+        // GetProjectAsync(int projectId, int companyId)
         /// <summary>
         /// Get a single Project by Id (integer)
         /// </summary>
@@ -27,9 +27,7 @@ namespace StatTracker.Services.Interfaces
 
         #region Get Projects Methods
         // GetProjectsAsync()
-        public Task<IEnumerable<Project>> GetProjectsAsync();
-
-        public Task<IEnumerable<Project>> GetProjectsByCompanyAsync(int companyId);
+        public Task<IEnumerable<Project>> GetProjectsAsync(int companyId);
 
         // GetProjectsByPriorityAsync()
         public Task<IEnumerable<Project>> GetProjectsByPriorityAsync();
@@ -55,6 +53,11 @@ namespace StatTracker.Services.Interfaces
 
         #region Addtional Methods
         public IEnumerable<Project> SearchProjects(string? searchString);
+
+        // GetProjectsByPriorityAsync()
+        public Task<IEnumerable<ProjectPriority>> GetProjectPrioritiesAsync();
+
+        public Task<IEnumerable<Company>> GetCompaniesAsync();
         #endregion
     }
 }

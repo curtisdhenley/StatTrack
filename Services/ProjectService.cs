@@ -5,7 +5,7 @@ using StatTracker.Services.Interfaces;
 
 namespace StatTracker.Services
 {
-    public class ProjectService : IProjectService
+    public class ProjectService : IBTProjectService
     {
         private readonly ApplicationDbContext _context;
 
@@ -49,9 +49,9 @@ namespace StatTracker.Services
                                                  .Include(p => p.Members)
                                                  .Include(p => p.ProjectPriority)
                                                  .Include(p => p.Tickets)
-                                                    .ThenInclude(t => t.DeveloperUser!.FullName)
+                                                    .ThenInclude(t => t.DeveloperUser)
                                                  .Include(p => p.Tickets)
-                                                    .ThenInclude(t => t.SubmitterUser!.FullName)
+                                                    .ThenInclude(t => t.SubmitterUser)
                                                  .FirstOrDefaultAsync(m => m.Id == projectId);
 
 
@@ -64,14 +64,39 @@ namespace StatTracker.Services
             }
         }
 
-        public Task<IEnumerable<Project>> GetProjectsAsync()
+        public async Task<IEnumerable<Project>> GetProjectsAsync(int companyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IEnumerable<Project> projects = await _context.Projects
+                                                          .Where(p => p.Archived == false && p.CompanyId == companyId)
+                                                          .Include(p => p.Members)
+                                                          .Include(p => p.ProjectPriority)
+                                                          .Include(p => p.Tickets)
+                                                          .ToListAsync();
+
+                return projects!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<IEnumerable<Project>> GetProjectsByCompanyAsync(int companyId)
+        public async Task<IEnumerable<Company>> GetCompaniesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                IEnumerable<Company> companies = await _context.Companies.ToListAsync();
+
+                return companies;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<IEnumerable<Project>> GetProjectsByEndDate()
@@ -103,6 +128,21 @@ namespace StatTracker.Services
         {
             _context.Update(project);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ProjectPriority>> GetProjectPrioritiesAsync()
+        {
+            try
+            {
+                IEnumerable<ProjectPriority> projectPriorities = await _context.ProjectPriorities.ToListAsync();
+
+                return projectPriorities;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

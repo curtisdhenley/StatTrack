@@ -48,7 +48,7 @@ namespace StatTracker.Controllers
             return View(invite);
         }
 
-        // GET: Invites/Create
+        // GET: Invites/AddTicketComment
         public IActionResult Create()
         {
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
@@ -58,7 +58,7 @@ namespace StatTracker.Controllers
             return View();
         }
 
-        // POST: Invites/Create
+        // POST: Invites/AddTicketComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

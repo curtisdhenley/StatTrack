@@ -3,7 +3,7 @@ using StatTracker.Models;
 
 namespace StatTracker.Services.Interfaces
 {
-    public interface ITicketService
+    public interface IBTTicketService
     {
         #region Ticket CRUD Methods
         // AddTicketAsync(Ticket ticket)
@@ -13,7 +13,7 @@ namespace StatTracker.Services.Interfaces
         public Task UpdateTicketAsync(Ticket ticket);
 
         // GetTicketAsync(int ticketId)
-        public Task<Ticket> GetTicketAsync(int id);
+        public Task<Ticket> GetTicketAsync();
 
         // GetTicketsAsync()
         public Task<IEnumerable<Ticket>> GetTicketsAsync();
@@ -23,6 +23,7 @@ namespace StatTracker.Services.Interfaces
         #endregion
 
         #region Get Tickets Methods
+        public Task<Ticket> GetTicketByIdAsync(int ticketId);
 
         public Task<IEnumerable<Ticket>> GetTicketsByCompanyAsync(int companyId);
 
@@ -52,9 +53,9 @@ namespace StatTracker.Services.Interfaces
         public Task AddTicketsToTicketAsync(IEnumerable<Ticket> ticketIds, int projectId);
         public Task<bool> IsTagOnBlogPostAsync(int tagId, int projectId);
         public Task<bool> ValidateSlugAsync(string title, int blogId);
+		public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
+		public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
 
-        
-
-        #endregion
-    }
+		#endregion
+	}
 }
