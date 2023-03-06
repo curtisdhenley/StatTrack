@@ -39,13 +39,19 @@ namespace StatTracker.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Project> GetProjectAsync(int projectId)
+        public async Task<Project> GetProjectAsync(int projectId, int companyId)
         {
             try
             {
                 Project? project = await _context.Projects
+                                                 .Where(p => p.CompanyId == companyId)
                                                  .Include(p => p.Company)
+                                                 .Include(p => p.Members)
                                                  .Include(p => p.ProjectPriority)
+                                                 .Include(p => p.Tickets)
+                                                    .ThenInclude(t => t.DeveloperUser!.FullName)
+                                                 .Include(p => p.Tickets)
+                                                    .ThenInclude(t => t.SubmitterUser!.FullName)
                                                  .FirstOrDefaultAsync(m => m.Id == projectId);
 
 

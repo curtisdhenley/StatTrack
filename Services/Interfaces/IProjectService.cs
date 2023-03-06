@@ -19,7 +19,7 @@ namespace StatTracker.Services.Interfaces
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public Task<Project> GetProjectAsync(int projectId);
+        public Task<Project> GetProjectAsync(int projectId, int companyId);
 
         // ArchiveProjectAsync(Project project)
         public Task ArchiveProjectAsync(Project project);

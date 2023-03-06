@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using StatTracker.Data;
+using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services.Interfaces;
 
 namespace StatTracker.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,10 +34,14 @@ namespace StatTracker.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Project> projects = await _context.Projects.Where(p => p.Archived == false).ToListAsync();
+            int companyId = User.Identity!.GetCompanyId();
 
+            IEnumerable<Project> projects = await _context.Projects
+                                                          .Where(p => p.Archived == false && p.CompanyId == companyId)
+                                                          .Include(p => p.Members)
+                                                          .Include(p => p.Tickets)
+                                                          .ToListAsync();
 
-            //var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
             return View(projects);
         }
 
@@ -44,9 +51,11 @@ namespace StatTracker.Controllers
             if (id == null)
             {
                 return NotFound();
-            }   
+            }
 
-            Project project = await _projectService.GetProjectAsync(id.Value);
+            int companyId = User.Identity!.GetCompanyId();
+
+            Project project = await _projectService.GetProjectAsync(id.Value, companyId);
 
 
             if (project == null)
