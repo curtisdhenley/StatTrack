@@ -18,12 +18,14 @@ namespace StatTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTFileService _btFileService;
+        private readonly IProjectService _projectService;
 
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IProjectService projectService)
         {
             _context = context;
             _userManager = userManager;
             _btFileService = btFileService;
+            _projectService = projectService;
         }
 
         // GET: Projects
@@ -39,15 +41,14 @@ namespace StatTracker.Controllers
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Projects == null)
+            if (id == null)
             {
                 return NotFound();
-            }
+            }   
 
-            var project = await _context.Projects
-                .Include(p => p.Company)
-                .Include(p => p.ProjectPriority)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Project project = await _projectService.GetProjectAsync(id.Value);
+
+
             if (project == null)
             {
                 return NotFound();
@@ -93,8 +94,8 @@ namespace StatTracker.Controllers
                     project.ImageFileType = project.ImageFormFile.ContentType;
                 }
 
-                _context.Add(project);
-                await _context.SaveChangesAsync();
+                await _projectService.AddProjectAsync(project);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
@@ -147,8 +148,7 @@ namespace StatTracker.Controllers
                         project.ImageFileType = project.ImageFormFile.ContentType;
                     }
 
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
+                    await _projectService.UpdateProjectAsync(project);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -176,10 +176,8 @@ namespace StatTracker.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.Company)
-                .Include(p => p.ProjectPriority)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Project project = await _projectService.GetProjectAsync(id.Value);
+
             if (project == null)
             {
                 return NotFound();
@@ -193,18 +191,15 @@ namespace StatTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Projects == null)
+            if (_projectService.GetProjectAsync(id) == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
-            Project? project = await _context.Projects.FindAsync(id);
-            if (project != null)
-            {
-                project.Archived = true;
-                _context.Projects.Update(project);
-            }
-            
-            await _context.SaveChangesAsync();
+
+            Project? project = await _projectService.GetProjectAsync(id);
+
+            await _projectService.ArchiveProjectAsync(project);
+
             return RedirectToAction(nameof(Index));
         }
 

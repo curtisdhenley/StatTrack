@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StatTracker.Data;
+using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services;
 using StatTracker.Services.Interfaces;
@@ -17,12 +18,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddClaimsPrincipalFactory<BTUserClaimsPrincipalFactory>()
     .AddDefaultUI()
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddDefaultTokenProviders();
 
 // Custom Services
 builder.Services.AddScoped<IBTFileService, BTFileService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 builder.Services.AddMvc();
 

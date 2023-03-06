@@ -25,12 +25,12 @@
                 <p class="card-text">
                     @Html.DisplayFor(modelItem => item.Description)
                 </p>
-                <p class="card-text">
+                @*<p class="card-text">
                     @Html.DisplayFor(modelItem => item.Archived)
                 </p>
                 <p class="card-text">
                     @Html.DisplayFor(modelItem => item.ArchivedByProject)
-                </p>
+                </p>*@
                 <p class="card-text">
                     @Html.DisplayFor(modelItem => item.Project.Description)
                 </p>
@@ -43,12 +43,12 @@
                 <p class="card-text">
                     @Html.DisplayFor(modelItem => item.TicketStatus.Id)
                 </p>
-                <p class="card-text">
+                @*<p class="card-text">
                     @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
                 </p>
                 <p class="card-text">
                     @Html.DisplayFor(modelItem => item.SubmitterUser.Id)
-                </p>
+                </p>*@
                 <p class="card-text">
                     <small class="text-muted">
                         Created: @Html.DisplayFor(modelItem => item.Created)

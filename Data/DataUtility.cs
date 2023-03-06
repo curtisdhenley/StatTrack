@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using StatTracker.Models;
-using StatTracker.Models.Enums;
 
 namespace StatTracker.Data
 {
