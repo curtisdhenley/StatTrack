@@ -49,9 +49,22 @@ namespace StatTracker.Services.Interfaces
         /// <returns></returns>
         public Task<IEnumerable<Project>> GetProjectsByEndDate(DateTime endDate);
 
+        public Task<Project> GetProjectByIdAsync(int projectId, int companyId);
+
+
+        public Task<BTUser> GetProjectManagerAsync(int projectId);
+
         #endregion
 
         #region Addtional Methods
+        public Task<bool> AddProjectManagerAsync(string userId, int projectId);
+
+        public Task<bool> AddMemberToProjectAsync(BTUser member, int projectId);
+
+        public Task RemoveProjectManagerAsync(int projectId);
+
+        public Task<bool> RemoveMemberFromProjectAsync(BTUser member, int projectId);
+
         public IEnumerable<Project> SearchProjects(string? searchString);
 
         // GetProjectsByPriorityAsync()
