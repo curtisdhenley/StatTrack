@@ -13,6 +13,8 @@ using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services.Interfaces;
 using StatTracker.Data;
+using StatTracker.Models.ViewModels;
+using StatTracker.Models.Enums;
 
 namespace StatTracker.Controllers
 {
@@ -23,13 +25,65 @@ namespace StatTracker.Controllers
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTFileService _btFileService;
         private readonly IBTProjectService _projectService;
+        private readonly IBTRolesService _rolesService;
 
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IBTProjectService projectService)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IBTProjectService projectService, IBTRolesService rolesService)
         {
             _context = context;
             _userManager = userManager;
             _btFileService = btFileService;
             _projectService = projectService;
+            _rolesService = rolesService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AssignPM(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Get companyId
+            int companyId = User.Identity!.GetCompanyId();
+
+            IEnumerable<BTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+            BTUser? currentPM = await _projectService.GetProjectManagerAsync(id);
+            AssignPMViewModel viewModel = new()
+            {
+                Project = await _projectService.GetProjectByIdAsync(id, companyId),
+                PMList = new SelectList(projectManagers, "Id", "FullName", currentPM?.Id),
+                PMId = currentPM?.Id,
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AssignPM(AssignPMViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.PMId))
+            {
+                await _projectService.AddProjectManagerAsync(viewModel.PMId!, viewModel.Project!.Id);
+                return RedirectToAction(nameof(Details), new { id = viewModel.Project?.Id });
+            }
+
+            ModelState.AddModelError("PMId", "No Project Manager chosen. Please select a PM.");
+
+            // Get companyId
+            int companyId = User.Identity!.GetCompanyId();
+
+            IEnumerable<BTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+            BTUser? currentPM = await _projectService.GetProjectManagerAsync(viewModel.Project?.Id);
+            viewModel.Project = await _projectService.GetProjectByIdAsync(viewModel.Project?.Id, companyId);
+            viewModel.PMList = new SelectList(projectManagers, "Id", "FullName", currentPM?.Id);
+            viewModel.PMId = currentPM?.Id;
+
+            return View(viewModel);
+
         }
 
         // GET: Projects
@@ -215,7 +269,7 @@ namespace StatTracker.Controllers
 
         private bool ProjectExists(int id)
         {
-          return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

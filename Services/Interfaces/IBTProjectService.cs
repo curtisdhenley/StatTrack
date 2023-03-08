@@ -49,10 +49,10 @@ namespace StatTracker.Services.Interfaces
         /// <returns></returns>
         public Task<IEnumerable<Project>> GetProjectsByEndDate(DateTime endDate);
 
-        public Task<Project> GetProjectByIdAsync(int projectId, int companyId);
+        public Task<Project> GetProjectByIdAsync(int? projectId, int companyId);
 
 
-        public Task<BTUser> GetProjectManagerAsync(int projectId);
+        public Task<BTUser> GetProjectManagerAsync(int? projectId);
 
         #endregion
 

@@ -148,7 +148,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<Project> GetProjectByIdAsync(int projectId, int companyId)
+        public async Task<Project> GetProjectByIdAsync(int? projectId, int companyId)
         {
             Project? project = await _context.Projects
                                                  .Where(p => p.CompanyId == companyId)
@@ -164,7 +164,7 @@ namespace StatTracker.Services
             return project!;
         }
 
-        public async Task<BTUser> GetProjectManagerAsync(int projectId)
+        public async Task<BTUser> GetProjectManagerAsync(int? projectId)
         {
             try
             {
