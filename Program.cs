@@ -28,6 +28,7 @@ builder.Services.AddScoped<IBTFileService, BTFileService>();
 builder.Services.AddScoped<IBTProjectService, BTProjectService>();
 builder.Services.AddScoped<IBTTicketService, TicketService>();
 builder.Services.AddScoped<IBTRolesService, BTRoleService>();
+builder.Services.AddScoped<IBTCompanyService, BTCompanyService>();
 
 builder.Services.AddMvc();
 

@@ -61,9 +61,13 @@ namespace StatTracker.Services.Interfaces
 
         public Task<bool> AddMemberToProjectAsync(BTUser member, int projectId);
 
+        public Task AddMembersToProjectAsync(IEnumerable<string> userIds, int? projectId, int companyId);
+
         public Task RemoveProjectManagerAsync(int projectId);
 
         public Task<bool> RemoveMemberFromProjectAsync(BTUser member, int projectId);
+
+        public Task RemoveMembersFromProjectAsync(int? projectId, int companyId);
 
         public IEnumerable<Project> SearchProjects(string? searchString);
 
