@@ -26,14 +26,16 @@ namespace StatTracker.Controllers
         private readonly IBTFileService _btFileService;
         private readonly IBTProjectService _projectService;
         private readonly IBTRolesService _rolesService;
+        private readonly IBTCompanyService _companyService;
 
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IBTProjectService projectService, IBTRolesService rolesService)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTFileService btFileService, IBTProjectService projectService, IBTRolesService rolesService, IBTCompanyService companyService)
         {
             _context = context;
             _userManager = userManager;
             _btFileService = btFileService;
             _projectService = projectService;
             _rolesService = rolesService;
+            _companyService = companyService;
         }
 
         [HttpGet]
@@ -185,7 +187,7 @@ namespace StatTracker.Controllers
         // GET: Projects/AddTicketComment
         public async Task<IActionResult> Create()
         {
-            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name");
+            ViewData["CompanyId"] = new SelectList(await _companyService.GetCompaniesAsync(), "Id", "Name");
             ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Id");
 
             Project project = new Project();
@@ -223,7 +225,7 @@ namespace StatTracker.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(await _companyService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
@@ -241,7 +243,7 @@ namespace StatTracker.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(await _projectService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(await _companyService.GetCompaniesAsync(), "Id", "Name", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }

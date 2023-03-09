@@ -1,16 +1,12 @@
-﻿@model ManageUserRolesViewModel
+﻿@model IEnumerable<ManageUserRolesViewModel>
 
 
-
-@{
-    ViewData["Title"] = "Assign Project Members";
-}
 
 <div class="row">
     <h2 class="m-t-0 h3"><b>Manage Member Roles </b></h2>
-    @foreach (var viewModel in Model)
-    {
-        <div class="row">
+    <div class="row">
+        @foreach (var viewModel in Model)
+        {
             <div class="card col-4 m-3">
                 <div class="card-body">
                     <p class="text-muted font-13 m-b-30">
@@ -37,6 +33,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

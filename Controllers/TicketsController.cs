@@ -13,6 +13,9 @@ using StatTracker.Services;
 using StatTracker.Services.Interfaces;
 using StatTracker.Data;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using StatTracker.Models.Enums;
+using StatTracker.Models.ViewModels;
 
 namespace StatTracker.Controllers
 {
@@ -22,17 +25,52 @@ namespace StatTracker.Controllers
 		private readonly IBTTicketService _ticketService;
 		private readonly UserManager<BTUser> _userManager;
 		private readonly IBTFileService _fileService;
+        private readonly IBTRolesService _rolesService;
 
-		public TicketsController(ApplicationDbContext context, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTFileService fileService)
+        public TicketsController(ApplicationDbContext context, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTFileService fileService, IBTRolesService rolesService)
+        {
+            _context = context;
+            _ticketService = ticketService;
+            _userManager = userManager;
+            _fileService = fileService;
+            _rolesService = rolesService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, ProjectManager")]
+        public async Task<IActionResult> AssignDeveloperToTicket(int? id)
 		{
-			_context = context;
-			_ticketService = ticketService;
-			_userManager = userManager;
-			_fileService = fileService;
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Get companyId
+            int companyId = User.Identity!.GetCompanyId();
+
+            Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+
+            IEnumerable<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+
+			AssignDeveloperToTicket viewModel = new()
+			{
+				Ticket = ticket,
+				DeveloperList = new SelectList(developers, "Id", "FullName", ticket?.DeveloperUserId),
+				DeveloperId = ticket?.DeveloperUserId
+			};
+
+			return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin, ProjectManager")]
+        public async Task<IActionResult> AssignDeveloperToTicket(AssignDeveloperToTicket viewModel)
+		{
+
 		}
 
-		// GET: Tickets
-		public async Task<IActionResult> Index()
+        // GET: Tickets
+        public async Task<IActionResult> Index()
 		{
 
 

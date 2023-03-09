@@ -65,7 +65,6 @@ namespace StatTracker.Services
                                                 .Where(c => c.Id == companyId)
                                                 .Include(c => c.Projects)
                                                 .Include(c => c.Invites)
-                                                .Include(c => c.Name)
                                                 .Include(c => c.Members)
                                                 .FirstOrDefaultAsync();
 

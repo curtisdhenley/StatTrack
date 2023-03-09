@@ -55,7 +55,9 @@ namespace StatTracker.Services.Interfaces
         public Task<bool> ValidateSlugAsync(string title, int blogId);
 		public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
 		public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
+        public Task<BTUser> GetDeveloperAsync(int? ticketId);
+        public Task<BTUser> GetSubmitterAsync(int? ticketId);
 
-		#endregion
-	}
+        #endregion
+    }
 }

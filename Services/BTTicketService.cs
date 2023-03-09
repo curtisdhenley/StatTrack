@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using StatTracker.Data;
 using StatTracker.Models;
+using StatTracker.Models.Enums;
 using StatTracker.Services.Interfaces;
 using System.ComponentModel.Design;
 
 namespace StatTracker.Services
 {
 
-	public class TicketService : IBTTicketService
+	public class BTTicketService : IBTTicketService
 	{
 		private readonly ApplicationDbContext _context;
 
-		public TicketService(ApplicationDbContext context)
+		public BTTicketService(ApplicationDbContext context)
 		{
 			_context = context;
 		}
@@ -45,7 +47,32 @@ namespace StatTracker.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<Ticket> GetTicketAsync()
+        public Task<BTUser> GetDeveloperAsync(int? ticketId)
+        {
+            throw new NotImplementedException();
+        }
+
+        //      public async Task<BTUser> GetDeveloperAsync(int? ticketId)
+        //      {
+        //	try
+        //	{
+        //		Ticket? ticket = await _context.Tickets.Include(t => t.DeveloperUser).FirstOrDefaultAsync(t => t.Id == ticketId);
+
+        //		return ticket!;
+        //	}
+        //	catch (Exception)
+        //	{
+
+        //		throw;
+        //	}
+        //}
+
+        public Task<BTUser> GetSubmitterAsync(int? ticketId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Ticket> GetTicketAsync()
 		{
 			try
 			{
