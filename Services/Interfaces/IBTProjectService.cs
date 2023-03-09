@@ -73,8 +73,6 @@ namespace StatTracker.Services.Interfaces
 
         // GetProjectsByPriorityAsync()
         public Task<IEnumerable<ProjectPriority>> GetProjectPrioritiesAsync();
-
-        public Task<IEnumerable<Company>> GetCompaniesAsync();
         #endregion
     }
 }

@@ -12,12 +12,12 @@
             <div class="card-title">@Model.Project?.Name</div>
         </div>
         <div class="card-body">
-            <form asp-action="AssignPM" asp-controller="Projects" method="post" class="d-flex flex-column">
+            <form asp-action="AssignProjectMembers" asp-controller="Projects" method="post" class="d-flex flex-column">
                 <input type="hidden" asp-for="Project!.Id" />
-                <select asp-items="Model.userList" asp-for="SelectedMembers" class="form-control" multiple required>
+                <select asp-items="Model.UserList" asp-for="SelectedMembers" class="form-control" multiple required>
                     <option value="">Select Members</option>
                 </select>
-                <span asp-validation-for="userList" class="text-danger"></span>
+                <span asp-validation-for="UserList" class="text-danger"></span>
                 <button type="submit" class="btn btn-primary my-3">Save</button>
                 <a asp-action="Details" asp-route-id="@Model.Project?.Id" class="btn btn-secondary">Cancel</a>
             </form>

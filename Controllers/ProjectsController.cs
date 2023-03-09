@@ -110,7 +110,7 @@ namespace StatTracker.Controllers
             ProjectMembersViewModel viewModel = new()
             {
                 Project = project,
-                UserList = new MultiSelectList(userList, "id", "FullName", currentMembers)
+                UserList = new MultiSelectList(userList, "Id", "FullName", currentMembers)
             };
 
             return View(viewModel);

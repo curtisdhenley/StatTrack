@@ -87,20 +87,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<IEnumerable<Company>> GetCompaniesAsync()
-        {
-            try
-            {
-                IEnumerable<Company> companies = await _context.Companies.ToListAsync();
-
-                return companies;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
+        
 
         public Task<IEnumerable<Project>> GetProjectsByEndDate()
         {
@@ -343,6 +330,61 @@ namespace StatTracker.Services
 
                 throw;
             }
+        }
+
+        //public Task AddProjectAsync(Models.Project project)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Task UpdateProjectAsync(Models.Project project)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        Task<Models.Project> IBTProjectService.GetProjectAsync(int projectId, int companyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        //public Task ArchiveProjectAsync(Models.Project project)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        Task<IEnumerable<Models.Project>> IBTProjectService.GetProjectsAsync(int companyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Models.Project>> IBTProjectService.GetProjectsByPriorityAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Models.Project>> IBTProjectService.GetProjectsByPriorityAsync(int projectPriorityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Models.Project>> IBTProjectService.GetProjectsByEndDate()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Models.Project>> IBTProjectService.GetProjectsByEndDate(DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Models.Project> IBTProjectService.GetProjectByIdAsync(int? projectId, int companyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<Models.Project> IBTProjectService.SearchProjects(string? searchString)
+        {
+            throw new NotImplementedException();
         }
     }
 }

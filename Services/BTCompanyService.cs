@@ -11,6 +11,7 @@ namespace StatTracker.Services
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
 
+
         public BTCompanyService(ApplicationDbContext context, UserManager<BTUser> userManager)
         {
             _context = context;
@@ -50,6 +51,34 @@ namespace StatTracker.Services
                 members = await _context.Users.Where(u => u.CompanyId == companyId).ToListAsync();
 
                 return members!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<Company> GetCompanyByIdAsync(int companyId)
+        {
+            Company? company = await _context.Companies
+                                                .Where(c => c.Id == companyId)
+                                                .Include(c => c.Projects)
+                                                .Include(c => c.Invites)
+                                                .Include(c => c.Name)
+                                                .Include(c => c.Members)
+                                                .FirstOrDefaultAsync();
+
+            return company!;
+        }
+
+        public async Task<IEnumerable<Company>> GetCompaniesAsync()
+        {
+            try
+            {
+                IEnumerable<Company> companies = await _context.Companies.ToListAsync();
+
+                return companies;
             }
             catch (Exception)
             {

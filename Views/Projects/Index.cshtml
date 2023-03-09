@@ -103,8 +103,12 @@
                                 <td class="text-light">
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <a asp-action="AssignPm" asp-route-id="@item.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
+                                        <a asp-action="AssignPm" asp-route-id="@item.Id" class="btn btn-outline-secondary rounded-pill waves-effect waves-light">
                                             Edit PM
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a asp-action="AssignProjectMembers" asp-route-id="@item.Id" class="btn btn-outline-secondary rounded-pill waves-effect waves-light">
+                                            Add Project Members
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                     }
