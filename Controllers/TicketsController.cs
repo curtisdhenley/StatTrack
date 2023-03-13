@@ -92,6 +92,22 @@ namespace StatTracker.Controllers
                 Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(viewModel.Ticket?.Id, companyId);
                 await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
 
+                BTUser? btUser = await _userManager.GetUserAsync(User);
+
+                Notification? notification = new()
+                {
+                    TicketId = viewModel.Ticket!.Id,
+                    Title = "Developer Assigned",
+                    Message = $"Ticket: {viewModel.Ticket!.Title} was assigned by {btUser!.FullName}",
+                    Created = DataUtility.GetPostGresDate(DateTime.Now),
+                    SenderId = userId,
+                    RecipientId = viewModel.DeveloperId,
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                };
+
+                await _notificationService.AddNotificationAsync(notification);
+                await _notificationService.SendEmailNotificationAsync(notification, "New Developer Assigned To Ticket");
+
 
                 return RedirectToAction(nameof(Details), new { id = viewModel.Ticket?.Id });
             }
