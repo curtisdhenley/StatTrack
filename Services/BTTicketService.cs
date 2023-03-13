@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Microsoft.Build.Evaluation;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using StatTracker.Data;
 using StatTracker.Models;
@@ -18,7 +19,29 @@ namespace StatTracker.Services
 			_context = context;
 		}
 
-		public Task AddTicketAsync(Ticket ticket)
+        public async Task<bool> AddDeveloperToTicketAsync(BTUser user, int? ticketId)
+        {
+            try
+            {
+                Ticket? ticket = await GetTicketByIdAsync(ticketId!.Value);
+
+                if (ticket.DeveloperUserId != null)
+                {
+                    ticket.DeveloperUser = user;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public Task AddTicketAsync(Ticket ticket)
 		{
 			throw new NotImplementedException();
 		}
@@ -71,6 +94,35 @@ namespace StatTracker.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Ticket> GetTicketAsNoTrackingAsync(int? ticketId, int? companyId)
+        {
+			try
+			{
+                Ticket? ticket = await _context.Tickets
+                                              .Include(t => t.Project)
+                                                .ThenInclude(p => p!.Company)
+                                              .Include(t => t.Attachments)
+                                              .Include(t => t.Comments)
+                                              .Include(t => t)
+                                              .Include(t => t.DeveloperUser)
+                                              .Include(t => t.History)
+                                              .Include(t => t.SubmitterUser)
+                                              .Include(t => t.TicketPriority)
+                                              .Include(t => t.TicketStatus)
+                                              .Include(t => t.TicketType)
+                                              .AsNoTracking()
+                                              .FirstOrDefaultAsync(t => t.Id == ticketId && t.Project!.CompanyId == companyId && t.Archived == false);
+
+				return ticket!;
+            }
+			catch (Exception)
+			{
+
+				throw;
+			}
+            
+		}
 
         public async Task<Ticket> GetTicketAsync()
 		{
