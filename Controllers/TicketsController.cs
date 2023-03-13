@@ -27,8 +27,10 @@ namespace StatTracker.Controllers
         private readonly IBTFileService _fileService;
         private readonly IBTRolesService _rolesService;
         private readonly IBTTicketHistoryService _historyService;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTNotificationService _notificationService;
 
-        public TicketsController(ApplicationDbContext context, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTFileService fileService, IBTRolesService rolesService, IBTTicketHistoryService historyService)
+        public TicketsController(ApplicationDbContext context, IBTTicketService ticketService, UserManager<BTUser> userManager, IBTFileService fileService, IBTRolesService rolesService, IBTTicketHistoryService historyService, IBTProjectService projectService, IBTNotificationService notificationService)
         {
             _context = context;
             _ticketService = ticketService;
@@ -36,6 +38,8 @@ namespace StatTracker.Controllers
             _fileService = fileService;
             _rolesService = rolesService;
             _historyService = historyService;
+            _projectService = projectService;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -76,7 +80,7 @@ namespace StatTracker.Controllers
 
                 try
                 {
-                    await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperList, viewModel.Ticket!.Id!);
+                    //await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperList, viewModel.Ticket!.Id!);
                 }
                 catch (Exception)
                 {
@@ -143,6 +147,10 @@ namespace StatTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,Updated,Archived,ArchivedByProject,ProjectId,TicketTypeId,TicketStatusId,TicketPriorityId,DeveloperUserId,SubmitterUserId")] Ticket ticket)
         {
+            BTUser? btUser = await _userManager.GetUserAsync(User);
+
+            ModelState.Remove("SubmitterUserId");
+
             if (ModelState.IsValid)
             {
                 string? userId = _userManager.GetUserId(User);
@@ -156,6 +164,33 @@ namespace StatTracker.Controllers
                 
 
                 await _historyService.AddHistoryAsync(null, newTicket, userId);
+
+                BTUser? projectManager = await _projectService.GetProjectManagerAsync(ticket.ProjectId);
+
+                Notification? notification = new()
+                {
+                    TicketId = ticket.Id,
+                    Title = "New Ticket Added",
+                    Message = $"New Ticket: {ticket.Title} was created by {btUser!.FullName}",
+                    Created = DataUtility.GetPostGresDate(DateTime.Now),
+                    SenderId = userId,
+                    RecipientId = projectManager?.Id,
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                };
+
+                if (projectManager != null )
+                {
+                    await _notificationService.AddNotificationAsync(notification);
+                    await _notificationService.SendEmailNotificationAsync(notification, "New Ticket Added");
+                }
+                else
+                {
+                    await _notificationService.AdminNotificationAsync(notification, companyId);
+                    await _notificationService.SendAdminEmailNotificationAsync(notification, "New Project underTicket Added", companyId);
+                }
+
+
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
@@ -201,6 +236,8 @@ namespace StatTracker.Controllers
                 return NotFound();
             }
 
+            BTUser? btUser = await _userManager.GetUserAsync(User);
+
             if (ModelState.IsValid)
             {
                 int companyId = User.Identity!.GetCompanyId();
@@ -236,7 +273,29 @@ namespace StatTracker.Controllers
                 await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
 
                 // Notification
+                BTUser? projectManager = await _projectService.GetProjectManagerAsync(ticket.ProjectId);
 
+                Notification? notification = new()
+                {
+                    TicketId = ticket.Id,
+                    Title = "New Ticket Added",
+                    Message = $"New Ticket: {ticket.Title} was created by {btUser!.FullName}",
+                    Created = DataUtility.GetPostGresDate(DateTime.Now),
+                    SenderId = userId,
+                    RecipientId = projectManager?.Id,
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                };
+
+                if (projectManager != null)
+                {
+                    await _notificationService.AddNotificationAsync(notification);
+                    await _notificationService.SendEmailNotificationAsync(notification, "New Ticket Added");
+                }
+                else
+                {
+                    await _notificationService.AdminNotificationAsync(notification, companyId);
+                    await _notificationService.SendAdminEmailNotificationAsync(notification, "New Project underTicket Added", companyId);
+                }
 
 
                 return RedirectToAction(nameof(Index));

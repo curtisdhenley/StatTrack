@@ -17,7 +17,7 @@ namespace StatTracker.Services
             _context = context;
         }
 
-        public async Task<bool> AddUserToRoleAsync(BTUser user, string roleName)
+        public async Task<bool> AddUserToRoleAsync(BTUser? user, string? roleName)
         {
             try
             {
@@ -47,11 +47,11 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<IEnumerable<string>> GetUserRolesAsync(BTUser user)
+        public async Task<IEnumerable<string?>> GetUserRolesAsync(BTUser? user)
         {
             try
             {
-                IEnumerable<string> result = await _userManager.GetRolesAsync(user);
+                IEnumerable<string?> result = await _userManager.GetRolesAsync(user);
 
                 return result;
             }
@@ -62,17 +62,17 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<List<BTUser>> GetUsersInRoleAsync(string roleName, int companyId)
+        public async Task<List<BTUser>> GetUsersInRoleAsync(string? roleName, int? companyId)
         {
             try
             {
                 List<BTUser> result = new();
                 List<BTUser> users = new();
 
-                users = (await _userManager.GetUsersInRoleAsync(roleName)).ToList();
+                users = (await _userManager.GetUsersInRoleAsync(roleName!)).ToList();
                 result = users.Where(u => u.CompanyId == companyId).ToList();
 
-                return result;
+                return result!;
             }
             catch (Exception)
             {
@@ -81,7 +81,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<bool> IsUserInRoleAsync(BTUser member, string roleName)
+        public async Task<bool> IsUserInRoleAsync(BTUser? member, string? roleName)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<bool> RemoveUserFromRoleAsync(BTUser user, string roleName)
+        public async Task<bool> RemoveUserFromRoleAsync(BTUser? user, string? roleName)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<bool> RemoveUserFromRolesAsync(BTUser user, IEnumerable<string> roleNames)
+        public async Task<bool> RemoveUserFromRolesAsync(BTUser? user, IEnumerable<string?> roleNames)
         {
             try
             {
