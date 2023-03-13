@@ -27,7 +27,7 @@ namespace StatTracker.Services.Interfaces
 
         #region Get Projects Methods
         // GetProjectsAsync()
-        public Task<IEnumerable<Project>> GetProjectsAsync(int companyId);
+        public Task<IEnumerable<Project>> GetProjectsAsync(int? companyId);
 
         // GetProjectsByPriorityAsync()
         public Task<IEnumerable<Project>> GetProjectsByPriorityAsync();

@@ -11,7 +11,7 @@ namespace StatTracker.Data
         {
         }
         public DbSet<StatTracker.Models.Company> Companies { get; set; } = default!;
-        public DbSet<StatTracker.Models.Invite> Invite { get; set; } = default!;
+        public DbSet<StatTracker.Models.Invite> Invites { get; set; } = default!;
         public DbSet<StatTracker.Models.Notification> Notifications { get; set; } = default!;
         public DbSet<StatTracker.Models.NotificationType> NotificationTypes { get; set; } = default!;
         public DbSet<StatTracker.Models.Project> Projects { get; set; } = default!;

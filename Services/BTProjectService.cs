@@ -67,7 +67,7 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<IEnumerable<Project>> GetProjectsAsync(int companyId)
+        public async Task<IEnumerable<Project>> GetProjectsAsync(int? companyId)
         {
             try
             {
