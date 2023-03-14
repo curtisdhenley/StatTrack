@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,12 @@ namespace StatTracker.Controllers
         private readonly IBTInviteService _inviteService;
         private readonly IBTProjectService _projectService;
         private readonly IBTCompanyService _companyService;
-        private readonly EmailService _emailService;
+        private readonly IEmailSender _emailService;
         private readonly IDataProtector _dataProtector;
         private readonly UserManager<BTUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public InvitesController(ApplicationDbContext context, IBTInviteService inviteService, IBTProjectService projectService, IBTCompanyService companyService, EmailService emailService, UserManager<BTUser> userManager, IDataProtectionProvider dataProtectionProvider, IConfiguration configuration)
+        public InvitesController(ApplicationDbContext context, IBTInviteService inviteService, IBTProjectService projectService, IBTCompanyService companyService, IEmailSender emailService, UserManager<BTUser> userManager, IDataProtectionProvider dataProtectionProvider, IConfiguration configuration)
         {
             _context = context;
             _inviteService = inviteService;
@@ -70,7 +71,7 @@ namespace StatTracker.Controllers
         }
 
         // GET: Invites/AddTicketComment
-        public async IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             int companyId = User.Identity!.GetCompanyId();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using StatTracker.Data;
 using StatTracker.Models;
 using StatTracker.Models.Enums;
@@ -9,10 +10,10 @@ namespace StatTracker.Services
     public class BTNotificationService : IBTNotificationService
     {
         private readonly ApplicationDbContext _context;
-        private readonly EmailService _emailService;
+        private readonly IEmailSender _emailService;
         private readonly IBTRolesService _rolesService;
 
-        public BTNotificationService(ApplicationDbContext context, EmailService emailService, IBTRolesService rolesService)
+        public BTNotificationService(ApplicationDbContext context, IEmailSender emailService, IBTRolesService rolesService)
         {
             _context = context;
             _emailService = emailService;
@@ -43,7 +44,7 @@ namespace StatTracker.Services
             {
                 if (notification != null)
                 {
-                    IEnumerable<string> adminIds = (await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Admin), companyId))!.Select(u => u.Id);
+                    IEnumerable<string> adminIds = (await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Admin), companyId))!.Select(u => u!.Id);
 
                     foreach (string adminId in adminIds)
                     {
@@ -95,7 +96,7 @@ namespace StatTracker.Services
             {
                 if (notification != null)
                 {
-                    IEnumerable<string> adminEmails = (await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Admin), companyId))!.Select(u => u.Email)!;
+                    IEnumerable<string> adminEmails = (await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Admin), companyId))!.Select(u => u!.Email)!;
 
                     foreach (string adminEmail in adminEmails)
                     {

@@ -236,7 +236,7 @@
                         <div class="dropdown-divider"></div>
 
                         <!-- item-->
-                        <a href="auth-logout.html" class="dropdown-item notify-item">
+                        <a asp-area="Identity" asp-page="/Account/Logout" class="dropdown-item notify-item">
                             <i class="fe-log-out"></i>
                             <span>Logout</span>
                         </a>
@@ -486,7 +486,7 @@
                                         <a href="auth-confirm-mail.html">Confirm Mail</a>
                                     </li>
                                     <li>
-                                        <a href="auth-logout.html">Logout</a>
+                                        <a asp-area="Identity" asp-page="/Account/Logout">Logout</a>
                                     </li>
                                 </ul>
                             </div>
