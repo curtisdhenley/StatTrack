@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Evaluation;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using StatTracker.Data;
@@ -13,11 +14,17 @@ namespace StatTracker.Services
 	public class BTTicketService : IBTTicketService
 	{
 		private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
+        private readonly IBTRolesService _rolesService;
+        private readonly IBTProjectService _projectService;
 
-		public BTTicketService(ApplicationDbContext context)
-		{
-			_context = context;
-		}
+        public BTTicketService(ApplicationDbContext context, UserManager<BTUser> userManager, IBTRolesService rolesService, IBTProjectService projectService)
+        {
+            _context = context;
+            _userManager = userManager;
+            _rolesService = rolesService;
+            _projectService = projectService;
+        }
 
         public async Task<bool> AddDeveloperToTicketAsync(BTUser user, int? ticketId)
         {
@@ -239,7 +246,34 @@ namespace StatTracker.Services
 			throw new NotImplementedException();
 		}
 
-		public Task<bool> IsTagOnBlogPostAsync(int tagId, int projectId)
+        public async Task<IEnumerable<Ticket>> GetUnassignedTicketsAsync(BTUser? user)
+        {
+            try
+            {
+                List<Ticket> tickets = new List<Ticket>();
+                //Get all unassigned tickets for the admin int he company
+				if (await _rolesService.IsUserInRoleAsync(user!, nameof(BTRoles.Admin)))
+                {
+                    tickets = await _context.Tickets
+											.Where(t => t.Project!.CompanyId == user!.CompanyId && t.Archived == false && t.DeveloperUser == null)
+											.ToListAsync();
+                }
+
+                if (await _rolesService.IsUserInRoleAsync(user!, nameof(BTRoles.ProjectManager)))
+                {
+                    tickets = await _context.Tickets
+											.Where(t => t.Project!.CompanyId == user!.CompanyId && t.Archived == false && t.DeveloperUser == null && user!.Projects!.Contains(t.Project))
+                                            .ToListAsync();
+                }
+                return tickets;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Task<bool> IsTagOnBlogPostAsync(int tagId, int projectId)
 		{
 			throw new NotImplementedException();
 		}

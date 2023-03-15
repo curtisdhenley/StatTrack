@@ -46,6 +46,8 @@ namespace StatTracker.Services.Interfaces
         /// <returns></returns>
         public Task<IEnumerable<Ticket>> GetTicketsByEndDate(DateTime endDate);
 
+        public Task<IEnumerable<Ticket>> GetUnassignedTicketsAsync(BTUser? user);
+
         #endregion
 
         #region Addtional Methods

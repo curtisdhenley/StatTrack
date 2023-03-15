@@ -11,11 +11,11 @@ using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services;
 using StatTracker.Services.Interfaces;
-using StatTracker.Data;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using StatTracker.Models.Enums;
 using StatTracker.Models.ViewModels;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace StatTracker.Controllers
 {
@@ -445,6 +445,17 @@ namespace StatTracker.Controllers
 
             Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
             return File(fileData, $"application/{ext}");
+        }
+
+        public async Task<IActionResult> unassignedTickets()
+        {
+            int companyId = User.Identity!.GetCompanyId();
+            string? userId = _userManager.GetUserId(User);
+
+
+            IEnumerable<Ticket> tickets = await _ticketService.GetUnassignedTicketsAsync(companyId);
+
+            return View(tickets);
         }
 
         private bool TicketExists(int id)
