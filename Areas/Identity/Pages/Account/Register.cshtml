@@ -23,9 +23,14 @@
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input." class="form-control" aria-required="true" placeholder="last name">
-                <label asp-for="Input.LastName">Last Name</label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                <input asp-for="Input.CompanyName" class="form-control" aria-required="true" placeholder="company name">
+                <label asp-for="Input.CompanyName">Company Name</label>
+                <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.CompanyDescription" class="form-control" aria-required="true" placeholder="company description">
+                <label asp-for="Input.CompanyDescription">Company Description</label>
+                <span asp-validation-for="Input.CompanyDescription" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />

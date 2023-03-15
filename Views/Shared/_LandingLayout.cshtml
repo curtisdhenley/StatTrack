@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Landing | StatTrack - An Issue Tracking Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully functional, multi-tenant Issue Tracking System" name="description" />
+    <meta content="Curtis Henley" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/Adminto_Template/Landing/images/favicon.ico">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/Adminto_Template/Landing/css/bootstrap.min.css" type="text/css">
+
+    <!--Material Icon -->
+    <link rel="stylesheet" type="text/css" href="~/Adminto_Template/Landing/css/materialdesignicons.min.css" />
+
+    <!--pe-7 Icon -->
+    <link rel="stylesheet" type="text/css" href="~/Adminto_Template/Landing/css/pe-icon-7-stroke.css" />
+
+    <!-- Custom  sCss -->
+    <link rel="stylesheet" type="text/css" href="~/Adminto_Template/Landing/css/style.css" />
+
+</head>
+
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="58" class="scrollspy-example">
+
+    <!--Navbar Start-->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark" id="nav-sticky">
+        <div class="container-fluid">
+            <!-- LOGO -->
+            <a class="logo text-uppercase" href="index.html">
+                <img src="~/Adminto_Template/Landing/images/logos/stat-track-high-resolution-logo-white-on-transparent-background.png" alt="" class="logo-light" height="45" />
+                <img src="~/Adminto_Template/Landing/images/logos/stat-track-high-resolution-logo-color-on-transparent-background.png" alt="" class="logo-dark" height="45" />
+            </a>
+
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-custom me-4">Check it out <i class="mdi mdi-chevron-right ms-1"></i></a>
+
+           @* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="mdi mdi-menu"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto" id="mySidenav">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#features" class="nav-link">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#services" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#demo" class="nav-link">Demos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#clients" class="nav-link">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#pricing" class="nav-link">Pricing</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </div>*@
+        </div>
+    </nav>
+    <!-- Navbar End -->
+    @RenderBody();
+    <!-- footer start -->
+    <footer class="footer bg-dark">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="text-center">
+                        <div class="footer-logo mb-3">
+                            <img src="~/Adminto_Template/Landing/images/logos/stat-track-high-resolution-logo-white-on-transparent-background.png" alt="" height="45">
+                        </div>
+                       @* <ul class="list-inline footer-list text-center mt-5">
+                            <li class="list-inline-item"><a href="#">Home</a></li>
+                            <li class="list-inline-item"><a href="#">About</a></li>
+                            <li class="list-inline-item"><a href="#">Services</a></li>
+                            <li class="list-inline-item"><a href="#">Clients</a></li>
+                            <li class="list-inline-item"><a href="#">Pricing</a></li>
+                            <li class="list-inline-item"><a href="#">Contact</a></li>
+                        </ul>*@
+                        <ul class="list-inline social-links mb-4 mt-5">
+                            <li class="list-inline-item">
+                                <a target="_blank" href="https://curtishenley.dev/" class="social-icons">
+                                    <i class="mdi mdi-web"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a target="_blank" href="https://www.linkedin.com/in/curtisdhenley/" class="social-icons">
+                                    <i class="mdi mdi-linkedin"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a target="_blank" href="https://github.com/curtisdhenley?tab=repositories" class="social-icons">
+                                    <i class="mdi mdi-github"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <script>document.write(new Date().getFullYear())</script>
+                        &copy; StatTracker by
+                        <a href="https://curtishenley.dev/" target="_blank" class="text-decoration-none">
+                            <strong class="hero-name">
+                                Curtis Henley
+                            </strong>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </footer>
+    <!-- footer end -->
+    <!-- Back to top -->
+    <a href="#" class="back-to-top" id="back-to-top"> <i class="mdi mdi-chevron-up"> </i> </a>
+
+    <!-- javascript -->
+    <script src="~/Adminto_Template/Landing/js/bootstrap.bundle.min.js"></script>
+    <!-- counter js -->
+    <script src="~/Adminto_Template/Landing/js/counter.int.js"></script>
+    <!-- custom js -->
+    <script src="~/Adminto_Template/Landing/js/app.js"></script>
+
+    @await RenderSectionAsync("scripts", required:false)
+</body>
+
+</html>

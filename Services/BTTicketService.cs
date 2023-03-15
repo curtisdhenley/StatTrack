@@ -41,9 +41,21 @@ namespace StatTracker.Services
             }
         }
 
-        public Task AddTicketAsync(Ticket ticket)
+        public async Task AddTicketAsync(Ticket ticket)
 		{
-			throw new NotImplementedException();
+			if (ticket != null)
+			{
+				try
+				{
+					await _context.AddAsync(ticket);
+					await _context.SaveChangesAsync();
+				}
+				catch (Exception)
+				{
+
+					throw;
+				} 
+			}
 		}
 
 		public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
@@ -104,7 +116,6 @@ namespace StatTracker.Services
                                                 .ThenInclude(p => p!.Company)
                                               .Include(t => t.Attachments)
                                               .Include(t => t.Comments)
-                                              .Include(t => t)
                                               .Include(t => t.DeveloperUser)
                                               .Include(t => t.History)
                                               .Include(t => t.SubmitterUser)

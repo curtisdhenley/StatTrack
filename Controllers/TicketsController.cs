@@ -19,6 +19,7 @@ using StatTracker.Models.ViewModels;
 
 namespace StatTracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -191,7 +192,8 @@ namespace StatTracker.Controllers
                     Created = DataUtility.GetPostGresDate(DateTime.Now),
                     SenderId = userId,
                     RecipientId = projectManager?.Id,
-                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id,
+                    ProjectId = ticket.ProjectId
                 };
 
                 if (projectManager != null )

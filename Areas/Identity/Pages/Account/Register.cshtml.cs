@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using StatTracker.Data;
 using StatTracker.Models;
+using StatTracker.Models.Enums;
 
 namespace StatTracker.Areas.Identity.Pages.Account
 {
@@ -146,7 +147,7 @@ namespace StatTracker.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync();
 
 
-                var user = CreateUser();
+                var user = CreateUser(company.Id);
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -155,6 +156,8 @@ namespace StatTracker.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    await _userManager.AddToRoleAsync(user, nameof(BTRoles.Admin));
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -188,7 +191,7 @@ namespace StatTracker.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private BTUser CreateUser()
+        private BTUser CreateUser(int companyId)
         {
             try
             {
@@ -196,6 +199,7 @@ namespace StatTracker.Areas.Identity.Pages.Account
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.CompanyId = companyId;
 
                 return user;
             }

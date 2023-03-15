@@ -50,7 +50,7 @@ namespace StatTracker.Controllers
             // Get companyId
             int companyId = User.Identity!.GetCompanyId();
 
-            IEnumerable<BTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+            IEnumerable<BTUser?> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
             BTUser? currentPM = await _projectService.GetProjectManagerAsync(id);
             AssignPMViewModel viewModel = new()
             {
@@ -78,7 +78,7 @@ namespace StatTracker.Controllers
             // Get companyId
             int companyId = User.Identity!.GetCompanyId();
 
-            IEnumerable<BTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+            IEnumerable<BTUser?> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
             BTUser? currentPM = await _projectService.GetProjectManagerAsync(viewModel.Project?.Id);
             viewModel.Project = await _projectService.GetProjectByIdAsync(viewModel.Project?.Id, companyId);
             viewModel.PMList = new SelectList(projectManagers, "Id", "FullName", currentPM?.Id);
@@ -102,10 +102,10 @@ namespace StatTracker.Controllers
 
             Project? project = await _projectService.GetProjectByIdAsync(id, companyId);
 
-            List<BTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
-            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            List<BTUser?> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
+            List<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
 
-            List<BTUser> userList = submitters.Concat(developers).ToList();
+            List<BTUser?> userList = submitters.Concat(developers).ToList();
 
             List<string> currentMembers = project.Members.Select(m => m.Id).ToList();
 
@@ -141,10 +141,10 @@ namespace StatTracker.Controllers
             // Reset the form
             viewModel.Project = await _projectService.GetProjectByIdAsync(viewModel.Project!.Id, companyId);
 
-            List<BTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
-            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            List<BTUser?> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
+            List<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
 
-            List<BTUser> userList = submitters.Concat(developers).ToList();
+            List<BTUser?> userList = submitters.Concat(developers).ToList();
 
             List<string> currentMembers = viewModel.Project.Members.Select(m => m.Id).ToList();
 
@@ -210,7 +210,7 @@ namespace StatTracker.Controllers
                 // display information based on company
                 //project.CompanyId = _userManager.GetUserId(User);
 
-                project.Created = DataUtility.GetPostGresDate(DateTime.UtcNow);
+                project.Created = DataUtility.GetPostGresDate(DateTime.Now);
                 project.StartDate = DataUtility.GetPostGresDate(project.StartDate);
                 project.EndDate = DataUtility.GetPostGresDate(project.EndDate);
 

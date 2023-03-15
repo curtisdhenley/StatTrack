@@ -18,13 +18,13 @@
     @foreach (var item in Model)
     {
         <div class="col-md-4">
-            <div class="card">
+            <div class="card h-99 mt-3">
                 <div class="card-body">
                     <h4 class="card-title">
                         @Html.DisplayFor(modelItem => item.Title)
                     </h4>
                     <p class="card-text">
-                        @Html.DisplayFor(modelItem => item.Description)
+                        @Html.Raw(item.Description)
                     </p>
                     @*<p class="card-text">
                 @Html.DisplayFor(modelItem => item.Archived)
@@ -35,7 +35,7 @@
                     <p class="card-text">
                         @Html.DisplayFor(modelItem => item.Project!.Description)
                     </p>
-                    <p class="card-text">
+                    @*<p class="card-text">
                         @Html.DisplayFor(modelItem => item.TicketPriority!.Id)
                     </p>
                     <p class="card-text">
@@ -43,7 +43,7 @@
                     </p>
                     <p class="card-text">
                         @Html.DisplayFor(modelItem => item.TicketStatus!.Id)
-                    </p>
+                    </p>*@
                     @*<p class="card-text">
                 @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
                 </p>
