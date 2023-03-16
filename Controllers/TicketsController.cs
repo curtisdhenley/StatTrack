@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using StatTracker.Models.Enums;
 using StatTracker.Models.ViewModels;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using X.PagedList;
 
 namespace StatTracker.Controllers
 {
@@ -117,11 +118,14 @@ namespace StatTracker.Controllers
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNum)
         {
+            int pageSize = 9;
+            int page = pageNum ?? 1;
 
+            IPagedList<Ticket> tickets = (await _ticketService.GetTicketsAsync()).ToPagedList(page, pageSize);
 
-            IEnumerable<Ticket> tickets = await _ticketService.GetTicketsAsync();
+            //IEnumerable<Ticket> tickets = await _ticketService.GetTicketsAsync();
 
             //var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
             return View(tickets);
@@ -447,13 +451,17 @@ namespace StatTracker.Controllers
             return File(fileData, $"application/{ext}");
         }
 
-        public async Task<IActionResult> unassignedTickets()
+        public async Task<IActionResult> unassignedTickets(int? pageNum)
         {
-            int companyId = User.Identity!.GetCompanyId();
-            string? userId = _userManager.GetUserId(User);
+            int pageSize = 9;
+            int page = pageNum ?? 1;
+
+            BTUser? user = await _userManager.GetUserAsync(User);
+
+            IPagedList<Ticket> tickets = (await _ticketService.GetUnassignedTicketsAsync(user)).ToPagedList(page, pageSize);
 
 
-            IEnumerable<Ticket> tickets = await _ticketService.GetUnassignedTicketsAsync(companyId);
+            //IEnumerable<Ticket> tickets = await _ticketService.GetUnassignedTicketsAsync(user);
 
             return View(tickets);
         }
