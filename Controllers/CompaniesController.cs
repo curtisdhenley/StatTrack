@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,6 +17,7 @@ using StatTracker.Services.Interfaces;
 
 namespace StatTracker.Controllers
 {
+    [Authorize]
     public class CompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -38,9 +40,12 @@ namespace StatTracker.Controllers
         // GET: Companies
         public async Task<IActionResult> Index()
         {
-              return _context.Companies != null ? 
-                          View(await _context.Companies.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Company'  is null.");
+            int companyId = User.Identity!.GetCompanyId();
+
+            Company? company = await _companyService.GetCompanyInfoAsync(companyId);
+
+            return View(company);
+                          
         }
 
         // GET: Companies/Details/5

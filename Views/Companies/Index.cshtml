@@ -1,4 +1,9 @@
-﻿@model IEnumerable<StatTracker.Models.Company>
+﻿@model StatTracker.Models.Company
+
+@using StatTracker.Models.Enums
+@using StatTracker.Services.Interfaces;
+
+@inject IBTFileService _btFileService
 
 @{
     ViewData["Title"] = "Index";
@@ -19,43 +24,35 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImageFileData)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageFileType)
+                Company Logo
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImageFileData)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImageFileType)
-                </td>
-                <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="ManageUserRoles" asp-route-id="@item.Id" class="btn btn-outline-secondary rounded-pill waves-effect waves-light">
-                            Edit User Roles
-                            <i class="bi bi-pencil-fill"></i>
-                        </a>
-                    }
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Description)
+            </td>
+            <td>
+                <img class="img-fluid border rounded-3 m-2" style="max-height: 250px;" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.CompanyImage)" alt="Company Image" id="companyImage">
+            </td>
+            <td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="ManageUserRoles" asp-route-id="@Model.Id" class="btn btn-outline-secondary rounded-pill waves-effect waves-light">
+                        Edit User Roles
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                }
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            </td>
+        </tr>
+
     </tbody>
 </table>

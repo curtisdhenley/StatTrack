@@ -12,9 +12,10 @@ using StatTracker.Data;
 using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Services.Interfaces;
-using StatTracker.Data;
 using StatTracker.Models.ViewModels;
 using StatTracker.Models.Enums;
+using StatTracker.Services;
+using X.PagedList;
 
 namespace StatTracker.Controllers
 {
@@ -154,11 +155,13 @@ namespace StatTracker.Controllers
         }
 
         // GET: Projects
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNum)
         {
             int companyId = User.Identity!.GetCompanyId();
+            int pageSize = 9;
+            int page = pageNum ?? 1;
 
-            IEnumerable<Project> projects = await _projectService.GetProjectsAsync(companyId);
+            IPagedList<Project> projects = (await _projectService.GetProjectsAsync(companyId)).ToPagedList(page, pageSize);
 
             return View(projects);
         }

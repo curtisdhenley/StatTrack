@@ -20,9 +20,9 @@
                     <div class="card col m-1 p-2">
                         <div class="body">
                             @* Project Name *@
-                            <h5>[Project Name]</h5>
+                            <h5>@Html.DisplayFor(model => model.Name)</h5>
                             @* Project Description *@
-                            <p>[Project description]</p>
+                            <p>@Html.DisplayFor(model => model.Description)</p>
                             <div class="progress-container progress-info m-b-25">
                                 <span class="progress-badge" style="font-size:small">Project Status</span>
                                 <div class="progress">
@@ -38,11 +38,20 @@
                     <div class="card col m-1 p-2">
                         <div class="body">
                             <ul class=" list-unstyled basic-list">
-                                <li>Start Date: <span class="">[Project Start Date]</span></li>
-                                <li>Deadline: <span class="">[Project End Date]</span></li>
-                                <li>Priority: <span class="">[Project Priority? Name]</span></li>
+                                <li>Start Date: <span class="">@Html.DisplayFor(model => model.StartDate)</span></li>
+                                <li>Deadline: <span class="">@Html.DisplayFor(model => model.EndDate)</span></li>
+                                <li>Priority: <span class="">@Html.DisplayFor(model => model.ProjectPriority!.Name)</span></li>
                                 @* if() logic *@
-                                [Project Active/Inactive]
+                                <li>
+                                    @if (Model.Archived == false)
+                                    {
+                                        <p>Project Active</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Project Inactive</p>
+                                    }
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -56,7 +65,7 @@
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;">
-                            @(  (   await _ProjectService.GetProjectManagerAsync(   Model.Id    )   )?.FullName  )
+                            @((await _ProjectService.GetProjectManagerAsync(Model.Id))?.FullName)
                             @* if() logic for Avatar/Default etc *@
 
                         </div>
@@ -73,8 +82,14 @@
                         <div class="body" style="overflow-y:auto;height:300px;">
                             <ul class="right_chat list-unstyled mb-0">
 
-                                [Project Members]
-                                @* Logic for avatars *@
+                                @foreach (BTUser members in Model.Members)
+                                {
+                                    <li>
+                                        @Html.DisplayFor(model => members.FullName)
+                                        @* Logic for avatars *@
+                                        <img src="@_btFileService.ConvertByteArrayToFile(members.ImageFileData!, members.ImageFileType!, (int)DefaultImage.BTUserImage)" alt="Post Images" class="rounded-circle avatar-sm" />
+                                    </li>
+                                }
                             </ul>
 
                         </div>
