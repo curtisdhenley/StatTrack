@@ -12,15 +12,16 @@
     ViewData["Title"] = "Dashboard";
     @* Instantiate the btUser *@
     BTUser? btUser = await UserManager.GetUserAsync(User);
+    string? userRole = (await RoleService.GetUserRolesAsync(btUser)).FirstOrDefault();
+    //int developerCount = (await RoleService.GetUsersInRoleAsync("Developer", btUser!.CompanyId)).Count();
 }
 
 <h1>Dashboard</h1>
-<a href="javascript:void(0);">
-    @* User Info *@
-    [Code: Copy from Ticket/Details]
-</a>
 @* Get The btUser FullName *@
 <strong>@btUser!.FullName</strong>
+<br />
+<strong>@userRole</strong>
+<br />
 <span class="text-muted" style="font-size:x-small;">
     @* Company Name *@
     <strong>@Model.Company!.Name</strong>
@@ -88,23 +89,28 @@
 
         <div class="row gy-2">
             <div class="col-md-12 col">
-                <div class="row col-cols-4 mt-5 bg-secondary">
+                <div class="row col-cols-2 mt-5 bg-secondary">
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h5>Chart 1</h5>
-                            <p>[Projects]</p>
+                            <h5>Projects by Priority</h5>
+                            <!-- Morris: Donut -->
+                            <div class="col-md-12">
+                                <div id="legend" class="donut-legend" style="font-size:x-small"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="chart chart-md" id="morrisProjectPriority"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Chart 2</h5>
-                            <p>[Projects]</p>
-                        </div>
+                    @*<div class="card col m-1 p-2">
+                    <div class="card-body">
+                    <h5>Chart 2</h5>
+                    <p>[Projects]</p>
                     </div>
+                    </div>*@
                     <div class="card col m-1 p-2">
                         <div class="card-body">
                             <h5>Tickets by Priority</h5>
-                            <p>[Morris Charts]</p>
                             <!-- Morris: Donut -->
                             <div class="col-md-12">
                                 <div id="legend" class="donut-legend" style="font-size:x-small"></div>
@@ -114,12 +120,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Chart 4</h5>
-                            <p>[Tickets]</p>
-                        </div>
+                    @* <div class="card col m-1 p-2">
+                    <div class="card-body">
+                    <h5>Chart 4</h5>
+                    <p>[Tickets]</p>
                     </div>
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -129,6 +135,10 @@
                     <div class="card-body" style="height:380px">
                         <h5>Chart 5</h5>
                         <p>[Projects: Tickets vs Developers]</p>
+                        @{
+                            // TODO: Y NO WORK????
+                            //Model.Tickets!.Count() - ((await RoleService.GetUsersInRoleAsync("Developer", btUser!.CompanyId)).Count())
+                        }
                     </div>
                 </div>
             </div>
@@ -138,14 +148,36 @@
     <div class="mt-5 ">
         <div class="row">
             @* Projects Table *@
-            <div class="col">
+            <div class="col-md-6">
                 <div class="bg-secondary">
                     <div class="card m-1 p-2">
                         <div class="card-header">
                             <h2>Projects</h2>
                         </div>
-                        <div class="card-body">
-                            @* [Copy and format table from Unassigned Tickets] *@
+                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
+                            <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Created</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                        </tr>
+                                    </thead>
+
+
+                                @foreach (Project project in Model.Projects!)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => project.Name)</td>
+                                            <td>@Html.DisplayFor(modelItem => project.Created)</td>
+                                            <td>@Html.DisplayFor(modelItem => project.StartDate)</td>
+                                            <td>@Html.DisplayFor(modelItem => project.EndDate)</td>
+                                        </tr>
+                                    </tbody>
+                                }
+                            </table>
                         </div>
                         <div class="card-footer">
                         </div>
@@ -153,22 +185,43 @@
                 </div>
             </div>
             @* Tickets Table *@
-            <div class="col">
+            <div class="col-md-6">
                 <div class="bg-secondary">
                     <div class="card m-1 p-2">
                         <div class="card-header">
                             <h2>Tickets</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
+                            <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Created</th>
+                                            <th>Developer</th>
+                                            <th>Submitter</th>
+                                        </tr>
+                                    </thead>
 
-                            @* Copy and format table from Unassigned Tickets *@
+
+                                @foreach (Ticket ticket in Model.Tickets!)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => ticket.Title)</td>
+                                            <td>@Html.DisplayFor(modelItem => ticket.Created)</td>
+                                            <td>@Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)</td>
+                                            <td>@Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)</td>
+                                        </tr>
+                                    </tbody>
+                                }
+                            </table>
                         </div>
                         <div class="card-footer">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 ">
+            <div class="col-md-4 ">
                 <div class="bg-dark">
                     <div class="card m-1 p-2">
                         <div class="card-header">
@@ -179,8 +232,6 @@
                             @foreach (BTUser member in Model.Members!)
                             {
                                 @* Loop over Company members. Display Name and Role *@
-                                string? userRole = (await RoleService.GetUserRolesAsync(member)).FirstOrDefault();
-
                                 @Html.DisplayFor(modelItem => member.FullName) <br />
                                 @Html.DisplayFor(modelItem => userRole)
                                 <hr />
@@ -198,29 +249,62 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <script>
 
-    var morrisDonutData = [{
+    var morrisProjectPriorityDonutData = [{
         label: "Low",
-        value: @Model.Tickets!.Where(t=>t.TicketPriority!.Name == nameof(BTTicketPriorities.Low)).Count()
-            }, {
+        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Low)).Count()
+                                }, {
         label: "Medium",
-        value: @Model.Tickets!.Where(t=>t.TicketPriority!.Name == nameof(BTTicketPriorities.Medium)).Count()
-            }, {
+        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Medium)).Count()
+                                }, {
         label: "High",
-        value: @Model.Tickets!.Where(t=>t.TicketPriority!.Name == nameof(BTTicketPriorities.High)).Count()
-            }, {
+        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.High)).Count()
+                                }, {
         label: "Urgent",
-        value: @Model.Tickets!.Where(t=>t.TicketPriority!.Name == nameof(BTTicketPriorities.Urgent)).Count()
-            }];
+        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Urgent)).Count()
+                                }];
+
+    var morrisTicketPriorityDonutData = [{
+        label: "Low",
+        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Low)).Count()
+                            }, {
+        label: "Medium",
+        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Medium)).Count()
+                            }, {
+        label: "High",
+        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.High)).Count()
+                            }, {
+        label: "Urgent",
+        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Urgent)).Count()
+                            }];
 
 
     /*
     Morris: Donut
     */
+    if ($('#morrisProjectPriority').get(0)) {
+        var donutChart = Morris.Donut({
+            resize: true,
+            element: 'morrisProjectPriority',
+            data: morrisProjectPriorityDonutData,
+            colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+        });
+
+        donutChart.options.data.forEach(function (label, i) {
+            var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+            legendItem.find('span')
+                .css('backgroundColor', donutChart.options.colors[i])
+                .css('width', '20px')
+                .css('display', 'inline-block')
+                .css('margin', '10px');
+            $('#legend').append(legendItem)
+        });
+    };
+
     if ($('#morrisTicketPriority').get(0)) {
         var donutChart = Morris.Donut({
             resize: true,
             element: 'morrisTicketPriority',
-            data: morrisDonutData,
+            data: morrisTicketPriorityDonutData,
             colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
         });
 
