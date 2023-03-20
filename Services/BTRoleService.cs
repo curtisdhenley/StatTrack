@@ -51,7 +51,7 @@ namespace StatTracker.Services
         {
             try
             {
-                IEnumerable<string?> result = await _userManager.GetRolesAsync(user);
+                IEnumerable<string?> result = await _userManager.GetRolesAsync(user!);
 
                 return result;
             }
