@@ -6,7 +6,7 @@
     Layout = "_LoginLayout";
 }
 
-<h1 class="text-center">@ViewData["Title"]</h1>
+<h1 class="text-center mt-3">@ViewData["Title"]</h1>
 
 <div class="account-pages my-5">
     <div class="container">
@@ -17,14 +17,13 @@
                     <a href="index.html">
                         <img src="assets/images/logo-dark.png" alt="" height="22" class="mx-auto">
                     </a>
-                    <p class="text-muted mt-2 mb-4">Login with your account or use a Demo</p>
 
                 </div>
                 <div class="card">
                     <div class="card-body p-4">
 
                         <div class="text-center mb-4">
-                            <h4 class="text-uppercase mt-0">Sign In</h4>
+                            <h4 class="text-uppercase mt-0">Local Login</h4>
                         </div>
 
                         <form id="account" method="post">
@@ -50,27 +49,7 @@
                             <div>
                                 <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                             </div>
-                        </form>
-                        <section>
-                            <h3>Or use one of the Demo Accounts to log in. </h3>
-                            <hr />
-
-                            <div class="mb-1 text-center">
-                                <form class="" id="account" method="post">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-8 btn-block">
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoAdminEmail">Demo Admin</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoPMEmail">Demo PM</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoDevEmail">Demo Developer</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoSubEmail">Demo Submitter</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </section>
+                        </form>                        
                     </div> <!-- end card-body -->
                 </div>
                 <!-- end card -->
@@ -91,6 +70,44 @@
                 <!-- end row -->
 
             </div> <!-- end col -->
+            <div class="col-md-4 col=lg-6 col-xl-4">
+                <div class="text-center">
+                    <a href="index.html">
+                        <img src="assets/images/logo-dark.png" alt="" height="22" class="mx-auto">
+                    </a>
+
+                </div>
+                <div class="card">
+                    <div class="card-body p-4">
+                        
+                        <div class="text-center mb-4">
+                            <h4 class="text-uppercase mt-0">Demo Login</h4>
+                        </div>
+
+                            <h2>Use a Demo account to log in.</h2>
+                            <hr />
+                        <section>
+
+                            <div class="mb-1 text-center">
+                                <form class="" id="account" method="post">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-8 btn-block">
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoAdminEmail">Demo Admin</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoPMEmail">Demo PM</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoDevEmail">Demo Developer</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoSubEmail">Demo Submitter</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </section>
+                    </div> <!-- end card-body -->
+                </div>
+                <!-- end card -->
+            </div>
         </div>
         <!-- end row -->
     </div>

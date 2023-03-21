@@ -1,13 +1,19 @@
 ﻿@model StatTracker.Models.Project
 
+@using Microsoft.AspNetCore.Identity;
 @using StatTracker.Services.Interfaces
 @using StatTracker.Models.Enums
 
 @inject IBTFileService _btFileService
 @inject IBTProjectService _ProjectService
+@inject SignInManager<BTUser> SignInManager
+@inject UserManager<BTUser> UserManager
+@inject IBTRolesService RoleService
 
 @{
     ViewData["Title"] = "Details";
+    BTUser? btUser = await UserManager.GetUserAsync(User);
+    BTUser? projectManager = await _ProjectService.GetProjectManagerAsync(Model.Id);
 }
 
 <h1>Details</h1>
@@ -65,9 +71,12 @@
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;">
-                            @((await _ProjectService.GetProjectManagerAsync(Model.Id))?.FullName)
+                            @(projectManager?.FullName)
                             @* if() logic for Avatar/Default etc *@
-
+                            @if (projectManager != null)
+                            {
+                                <img src="@_btFileService.ConvertByteArrayToFile(projectManager.ImageFileData!, projectManager.ImageFileType!, (int)DefaultImage.BTUserImage)" alt="Post Images" class="rounded-circle avatar-sm" />
+                            }
                         </div>
                     </div>
                 </div>
@@ -119,17 +128,28 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive" style="overflow-y:auto;height:600px;">
-                                <table class="table table-hover">
-                                    <thead class="">
+                                <table id="datatable" class="table table-bordered dt-responsive table-responsive table-hover nowrap">
+                                    <thead>
                                         <tr>
-                                            @* Table header *@
-                                            [Ticket Table header]
+                                            <th>Title</th>
+                                            <th>Created</th>
+                                            <th>Developer</th>
+                                            <th>Submitter</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @* Table body *@
-                                        [Ticket Table body]
-                                    </tbody>
+
+
+                                    @foreach (Ticket ticket in Model.Tickets!)
+                                    {
+                                        <tbody>
+                                            <tr>
+                                                <td><a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a></td>
+                                                <td>@Html.DisplayFor(modelItem => ticket.Created)</td>
+                                                <td>@Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)</td>
+                                                <td>@Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)</td>
+                                            </tr>
+                                        </tbody>
+                                    }
                                 </table>
                             </div>
 
@@ -141,7 +161,7 @@
         </div>
     </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to Projects</a>
+<div class="mt-2">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning rounded-pill">Edit</a>
+    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Back to Projects</a>
 </div>
