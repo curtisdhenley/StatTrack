@@ -206,7 +206,32 @@ namespace StatTracker.Services
 			}
 		}
 
-		public async Task<IEnumerable<Ticket>> GetTicketsAsync()
+        public async Task<Ticket> GetTicketByIdAsync(int? ticketId, int? companyId)
+        {
+            try
+            {
+                Ticket? ticket = await _context.Tickets
+                                               .Include(t => t.DeveloperUser)
+                                               .Include(t => t.SubmitterUser)
+                                               .Include(t => t.Project)
+                                               .Include(t => t.TicketPriority)
+                                               .Include(t => t.TicketStatus)
+                                               .Include(t => t.TicketType)
+                                               .Include(t => t.Comments)
+                                               .Include(t => t.Attachments)
+                                               .Include(t => t.History)
+                                               .FirstOrDefaultAsync(m => m.Id == ticketId && m.Project.CompanyId == companyId);
+
+                return ticket!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Ticket>> GetTicketsAsync()
 		{
 			IEnumerable<Ticket> tickets = await _context.Tickets
 											   .Where(t => t.Archived == false)

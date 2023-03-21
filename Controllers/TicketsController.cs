@@ -139,7 +139,10 @@ namespace StatTracker.Controllers
                 return NotFound();
             }
 
-            var ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+            // Get companyId
+            int companyId = User.Identity!.GetCompanyId();
+
+            Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value, companyId);
 
             if (ticket == null)
             {

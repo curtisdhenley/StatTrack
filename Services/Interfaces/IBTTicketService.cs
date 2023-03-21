@@ -24,6 +24,8 @@ namespace StatTracker.Services.Interfaces
         #region Get Tickets Methods
         public Task<Ticket> GetTicketByIdAsync(int ticketId);
 
+        public Task<Ticket> GetTicketByIdAsync(int? ticketId, int? companyId);
+
         public Task<IEnumerable<Ticket>> GetTicketsByCompanyAsync(int companyId);
 
         // GetTicketsByPriorityAsync()
