@@ -19,13 +19,13 @@
     <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Back to Tickets</a>
 </p>
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (Ticket ticket in Model)
     {
         <div class="col-md-4">
             <div class="card h-99 mt-3">
                 <div class="card-body">
                     <h4 class="card-title">
-                        Issue: @Html.DisplayFor(modelItem => item.Title)
+                        Issue: <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
                     </h4>
                     @*<p class="card-text">
                 @Html.DisplayFor(modelItem => item.Archived)
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.ArchivedByProject)
                 </p>*@
                     <p class="card-text">
-                        Details: @Html.DisplayFor(modelItem => item.Project!.Description)
+                        Details: @Html.DisplayFor(modelItem => ticket.Project!.Description)
                     </p>
                     @*<p class="card-text">
                         @Html.DisplayFor(modelItem => item.TicketPriority!.Id)
@@ -45,10 +45,10 @@
                     <p class="card-text">
                         @Html.DisplayFor(modelItem => item.TicketStatus!.Id)
                     </p>*@
-                    @if (item.DeveloperUser != null)
+                    @if (ticket.DeveloperUser != null)
                     {
                     <p class="card-text">
-                        Developer: @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
+                        Developer: @Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)
                         </p>
                     }
                     else
@@ -58,27 +58,27 @@
                         </p>
                     }
                     <p class="card-text">
-                        Submitter: @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
+                        Submitter: @Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)
                     </p>
                     <p class="card-text">
                         <small class="text-muted">
-                            Created: @Html.DisplayFor(modelItem => item.Created)
+                            Created: @Html.DisplayFor(modelItem => ticket.Created)
                         </small>
                     </p>
                     <p class="card-text">
                         <small class="text-muted">
-                            Last Updated: @Html.DisplayFor(modelItem => item.Updated)
+                            Last Updated: @Html.DisplayFor(modelItem => ticket.Updated)
                         </small>
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
+                    <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded-pill waves-effect waves-light">
+                    <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-info rounded-pill waves-effect waves-light">
                         <i class="bi bi-info-circle-fill"></i>
                     </a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
+                    <a asp-action="Delete" asp-route-id="@ticket.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
                         <i class="bi bi-trash-fill"></i>
                     </a>
                 </div>

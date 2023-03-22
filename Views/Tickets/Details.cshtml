@@ -1,8 +1,11 @@
 ﻿@model StatTracker.Models.Ticket
 
 @using StatTracker.Services.Interfaces;
+@using Microsoft.AspNetCore.Identity
+@using StatTracker.Models.Enums
 
 @inject IBTFileService BTFileService
+@inject UserManager<BTUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -54,71 +57,62 @@
                 </div>
             </div>
             <div class="col-md-8 col col-cols-2 mt-5 ">
-                <div class="col">
-                    <div class="bg-secondary">
-                        <div class="card m-1 p-2">
-                            <div class="card-header">
-                                <h2>Comments</h2>
-                            </div>
-                            <div class="card-body" style="overflow-y:auto;height:600px;">
-                                @*Form and Logic for authorized users to add comments*@
-                                @if (!User.Identity!.IsAuthenticated)
+                <!--Ticket Comments card-->        <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="mt-0 mb-3">Comments (@Model.Comments.Count)</h3>
+                            <hr />
+                            <div style="height: 400px; overflow-y:auto">
+                                @*Loop to show comments made for the Ticket*@
+                                @foreach (TicketComment comment in Model.Comments)
                                 {
-                                    <div class="axil-total-comment-post">
-                                        <div class="title">
-                                            <h4 class="mb--0">30+ Comments</h4>
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0 me-3">
+                                            <a href="#"> <img src="@BTFileService.ConvertByteArrayToFile(comment.BTUser!.ImageFileData!, comment.BTUser!.ImageFileType!, (int)DefaultImage.BTUserImage)" alt="Post Images" class="rounded-circle avatar-sm" /> </a>
                                         </div>
-                                        <div class="add-comment-button cerchio">
-                                            <a asp-area="Identity" asp-page="/Account/Login" class="axil-button button-rounded" tabindex="0"><span>Login to Comment</span></a>
+                                        <div class="flex-grow-1">
+                                            <h5 class="mt-0">@comment.BTUser?.FullName</h5>
+                                            <p class="font-15 text-muted mb-0">
+                                                @comment.Comment
+                                            </p>
                                         </div>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <div>
+                                                <a asp-action="Delete" asp-controller="TicketComments" asp-route-id="@comment.Id" class="btn btn-sm btn-outline-danger rounded-pill w-md waves-effect waves-light mb-3"><i class="mdi mdi-archive"></i>Delete</a>
+                                            </div>
+                                        }
                                     </div>
                                 }
-                                else
-                                {
-                                    <!-- Start Comment Respond  -->
-                                    <div class="comment-respond">
-                                        <h4 class="title">Post a comment</h4>
-                                        <form asp-action="Create">
-                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            <div class="form-group">
-                                                <label asp-for="Comments" class="control-label"></label>
-                                                <input asp-for="Comments" class="form-control" />
-                                                <span asp-validation-for="Comments" class="text-danger"></span>
+                            </div> 
+                            @*Logic and form for comment*@
+                            <form asp-action="AddTicketComment" asp-controller="Tickets" asp-route-id="@Model.Id" method="post">
+                                <div class="row row--10">
+                                    <div class="col-12">
+                                        <div class="d-flex mb-3">
+                                            <div class="me-3">
+                                                @foreach (TicketComment comment in Model.Comments)
+                                                {
+                                                <a href="#"> <img src="@BTFileService.ConvertByteArrayToFile(comment.BTUser!.ImageFileData!, comment.BTUser!.ImageFileType!, (int)DefaultImage.BTUserImage)" alt="Post Images" class="rounded-circle avatar-sm" /> </a>
+                                                    
+                                                }
                                             </div>
-                                            <div class="form-group">
-                                                <label asp-for="Created" class="control-label"></label>
-                                                <input asp-for="Created" class="form-control" />
-                                                <span asp-validation-for="Created" class="text-danger"></span>
+                                            <div class="flex-grow-1 form-group">
+                                                @*<label for="comment">Leave a Comment</label>*@
+                                                <input type="text" id="Comment" name="Comment" class="form-control" placeholder="Enter comment here...">
                                             </div>
-                                            <div class="form-group">
-                                                <label asp-for="Id" class="control-label"></label>
-                                                <select asp-for="Id" class="form-control" asp-items="ViewBag.TicketId"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="SubmitterUserId" class="control-label"></label>
-                                                <input asp-for="SubmitterUserId" class="form-control" />
-                                                <span asp-validation-for="SubmitterUserId" class="text-danger"></span>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="submit" value="Create" class="btn btn-primary" />
-                                            </div>
-                                        </form>
+                                        </div>
                                     </div>
-                                }
-                                <hr />
-                                <h6>Comments</h6>
-                                <ul class="right_chat list-unstyled mb-0">
-                                    @*Loop to show comments made for the Ticket*@
-                                    @foreach (TicketComment comment in Model.Comments)
-                                    {
-                                    }
-                                </ul>
-                            </div>
-                            <div class="card-footer">
-                            </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-submit cerchio">
+                                            <input type="submit" class="btn btn-outline-info rounded-pill w-md waves-effect waves-light mb-3" value="Post Comment">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
+                </div>        <!-- End Ticket Comments card-->
                 <div class="col">
                     <div class="bg-secondary">
                         <div class="card m-1 p-2">
