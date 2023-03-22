@@ -56,8 +56,8 @@ namespace StatTracker.Services.Interfaces
         public Task AddTicketsToTicketAsync(IEnumerable<Ticket> ticketIds, int projectId);
         public Task<bool> IsTagOnBlogPostAsync(int tagId, int projectId);
         public Task<bool> ValidateSlugAsync(string title, int blogId);
-		public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
-		public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
+        public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
+        public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
         public Task<BTUser> GetDeveloperAsync(int? ticketId);
         public Task<BTUser> GetSubmitterAsync(int? ticketId);
         public Task<bool> AddDeveloperToTicketAsync(BTUser user, int? ticketId);

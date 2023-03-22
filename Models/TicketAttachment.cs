@@ -30,12 +30,12 @@ namespace StatTracker.Models
 
 		public string? FileName { get; set; }
 
-		[NotMapped]
-		[DisplayName("Select a file")]
-		[DataType(DataType.Upload)]
-		[MaxFileSize(1024 * 1024)]
-		[AllowedExtensions(new string[] { ".jpg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf" })]
-		public virtual IFormFile? FormFile { get; set; }
+        [NotMapped]
+        [DisplayName("Select a file")]
+        [DataType(DataType.Upload)]
+        [MaxFileSize(1024 * 1024)]
+        [AllowedExtensions(new string[] { ".jpg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf" })]
+        public IFormFile? FormFile { get; set; }
 
         // Navigation Properties
         public virtual Ticket? Ticket { get; set; }

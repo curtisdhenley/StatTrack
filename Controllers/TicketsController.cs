@@ -58,7 +58,7 @@ namespace StatTracker.Controllers
 
             Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
-            IEnumerable<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            IEnumerable<BTUser>? developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
 
             AssignDeveloperToTicket viewModel = new()
             {
@@ -155,12 +155,12 @@ namespace StatTracker.Controllers
         // GET: Tickets/AddTicketComment
         public IActionResult Create()
         {
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description");
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id");
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id");
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id");
+            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "FullName");
+            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
+            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
+            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
             return View();
         }
 
@@ -218,12 +218,6 @@ namespace StatTracker.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", ticket.ProjectId);
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
 
@@ -240,12 +234,12 @@ namespace StatTracker.Controllers
             {
                 return NotFound();
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
+            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", ticket.ProjectId);
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
+            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.SubmitterUserId);
+            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
+            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
         }
 
@@ -263,6 +257,8 @@ namespace StatTracker.Controllers
 
             BTUser? btUser = await _userManager.GetUserAsync(User);
 
+            ModelState.Remove("SubmitterUserId");
+
             if (ModelState.IsValid)
             {
                 int companyId = User.Identity!.GetCompanyId();
@@ -277,6 +273,8 @@ namespace StatTracker.Controllers
                     {
                         ticket.Updated = DataUtility.GetPostGresDate(DateTime.Now);
                     }
+
+                    ticket.SubmitterUserId = userId;
 
                     await _ticketService.UpdateTicketAsync(ticket);
                 }
@@ -304,11 +302,12 @@ namespace StatTracker.Controllers
                 {
                     TicketId = ticket.Id,
                     Title = "New Ticket Added",
-                    Message = $"New Ticket: {ticket.Title} was created by {btUser!.FullName}",
+                    Message = $"Ticket Updated: {ticket.Title} was updated by {btUser!.FullName}",
                     Created = DataUtility.GetPostGresDate(DateTime.Now),
                     SenderId = userId,
                     RecipientId = projectManager?.Id,
-                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id,
+                    ProjectId = ticket.ProjectId
                 };
 
                 if (projectManager != null)
@@ -325,12 +324,6 @@ namespace StatTracker.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", ticket.ProjectId);
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
 
@@ -414,24 +407,14 @@ namespace StatTracker.Controllers
 
             if (ModelState.IsValid && ticketAttachment.FormFile != null)
             {
-                try
-                {
-                    ticketAttachment.FileData = await _fileService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
-                    ticketAttachment.FileType = ticketAttachment.FormFile.ContentType;
+                ticketAttachment.FileData = await _fileService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.FileType = ticketAttachment.FormFile.ContentType;
 
-                    ticketAttachment.Created = DataUtility.GetPostGresDate(DateTime.UtcNow);
-                    ticketAttachment.BTUserId = _userManager.GetUserId(User);
+                ticketAttachment.Created = DateTime.Now;
+                ticketAttachment.BTUserId = _userManager.GetUserId(User);
 
-                    await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
-
-                    await _historyService.AddHistoryAsync(ticketAttachment.TicketId, nameof(TicketAttachment), ticketAttachment.BTUserId);
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
+                await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
                 statusMessage = "Success: New attachment added to Ticket.";
             }
             else
@@ -446,12 +429,12 @@ namespace StatTracker.Controllers
         public async Task<IActionResult> ShowFile(int id)
         {
             TicketAttachment ticketAttachment = await _ticketService.GetTicketAttachmentByIdAsync(id);
-            string fileName = ticketAttachment.FileName!;
-            byte[] fileData = ticketAttachment.FileData!;
-            string ext = Path.GetExtension(fileName).Replace(".", "");
+            string? fileName = ticketAttachment.FileName;
+            byte[]? fileData = ticketAttachment.FileData;
+            string? ext = Path.GetExtension(fileName)!.Replace(".", "");
 
             Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
-            return File(fileData, $"application/{ext}");
+            return File(fileData!, $"application/{ext}");
         }
 
         public async Task<IActionResult> unassignedTickets(int? pageNum)

@@ -65,21 +65,21 @@ namespace StatTracker.Services
 			}
 		}
 
-		public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
-		{
-			try
-			{
-				await _context.AddAsync(ticketAttachment);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception)
-			{
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
 
-				throw;
-			}
-		}
+                throw;
+            }
+        }
 
-		public Task AddTicketsToTicketAsync(IEnumerable<Ticket> ticketIds, int projectId)
+        public Task AddTicketsToTicketAsync(IEnumerable<Ticket> ticketIds, int projectId)
 		{
 			throw new NotImplementedException();
 		}
@@ -165,23 +165,24 @@ namespace StatTracker.Services
 			}
 		}
 
-		public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
-		{
-			try
-			{
-				TicketAttachment? ticketAttachment = await _context.TicketAttachments
-																  .Include(t => t.BTUser)
-																  .FirstOrDefaultAsync(t => t.Id == ticketAttachmentId);
-				return ticketAttachment!;
-			}
-			catch (Exception)
-			{
+        public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
+        {
+            try
+            {
+                TicketAttachment? ticketAttachment = await _context.TicketAttachments
+                                                                  .Include(t => t.BTUser)
+                                                                  .FirstOrDefaultAsync(t => t.Id == ticketAttachmentId);
+                return ticketAttachment!;
+            }
+            catch (Exception)
+            {
 
-				throw;
-			}
-		}
+                throw;
+            }
+        }
 
-		public async Task<Ticket> GetTicketByIdAsync(int ticketId)
+
+        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
 		{
 			try
 			{
@@ -303,9 +304,10 @@ namespace StatTracker.Services
 			throw new NotImplementedException();
 		}
 
-		public Task UpdateTicketAsync(Ticket ticket)
+		public async Task UpdateTicketAsync(Ticket ticket)
 		{
-			throw new NotImplementedException();
+			_context.Update(ticket);
+			await _context.SaveChangesAsync();
 		}
 
 		public Task<bool> ValidateSlugAsync(string title, int blogId)

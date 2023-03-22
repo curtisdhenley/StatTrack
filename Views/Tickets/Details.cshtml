@@ -3,6 +3,7 @@
 @using StatTracker.Services.Interfaces;
 @using Microsoft.AspNetCore.Identity
 @using StatTracker.Models.Enums
+@using StatTracker.Services
 
 @inject IBTFileService BTFileService
 @inject UserManager<BTUser> UserManager
@@ -23,7 +24,7 @@
                             @*Title of Ticket*@
                             <h5>@Html.DisplayFor(model => model.Title)</h5>
                             @*Description of Ticket*@
-                            <p>@Html.DisplayFor(model => model.Description)</p>
+                            <p>@Html.Raw(Model.Description)</p>
                             <div class="progress-container progress-info m-b-25">
                                 @*Project Name and information*@
                                 <span class="progress-badge" style="font-size:small">Project: @Html.DisplayFor(model => model.Project!.Name)</span>
