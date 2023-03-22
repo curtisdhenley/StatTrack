@@ -282,19 +282,15 @@
                             @*Loop to show the history entries for the Ticket*@
                             @foreach (TicketHistory ticketHistory in Model.History)
                             {
-                                <span class="text-primary">@ticketHistory.Created</span>
-                                <br />
-                                <span>@ticketHistory.Description!</span>
-                                <br />
-                                <br />
+                                <h4 class="mt-0">@ticketHistory.Created.ToString("MM/dd/yyyy hh:mm tt")</h4>
+                                <p class="font-13 text-muted mb-0">
+                                    - @ticketHistory.Description
+                                </p>
                             }
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </div>
