@@ -395,8 +395,7 @@ namespace StatTracker.Controllers
 
                 await _historyService.AddHistoryAsync(ticketComment.TicketId, nameof(TicketComment), ticketComment.UserId);
             }
-            //return RedirectToAction("Details", "BlogPosts", new { slug = slug });
-            return RedirectToAction("Details", "Tickets", ticketComment?.TicketId);
+            return RedirectToAction("Details", "Tickets", new { id = ticketComment?.Id });
         }
 
         [HttpPost]

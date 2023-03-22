@@ -258,6 +258,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <script>
 
+    // Project Priority
     var morrisProjectPriorityDonutData = [{
         label: "Low",
         value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Low)).Count()
@@ -272,6 +273,7 @@
         value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Urgent)).Count()
                                     }];
 
+    // Ticket Priority
     var morrisTicketPriorityDonutData = [{
         label: "Low",
         value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Low)).Count()
