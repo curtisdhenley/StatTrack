@@ -15,7 +15,7 @@ namespace StatTracker.Services.Interfaces
         public Task<Ticket> GetTicketAsync();
 
         // GetTicketsAsync()
-        public Task<IEnumerable<Ticket>> GetTicketsAsync();
+        public Task<IEnumerable<Ticket>> GetTicketsAsync(int? companyId);
 
         // DeleteTicketAsync(Ticket ticket)
         public Task DeleteTicketAsync(Ticket ticket);

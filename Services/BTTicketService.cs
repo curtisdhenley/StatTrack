@@ -221,7 +221,7 @@ namespace StatTracker.Services
                                                .Include(t => t.Comments)
                                                .Include(t => t.Attachments)
                                                .Include(t => t.History)
-                                               .FirstOrDefaultAsync(m => m.Id == ticketId && m.Project.CompanyId == companyId);
+                                               .FirstOrDefaultAsync(m => m.Id == ticketId && m.Project!.CompanyId == companyId);
 
                 return ticket!;
             }
@@ -232,17 +232,17 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketsAsync()
+        public async Task<IEnumerable<Ticket>> GetTicketsAsync(int? companyId)
 		{
 			IEnumerable<Ticket> tickets = await _context.Tickets
-											   .Where(t => t.Archived == false)
-											   .Include(t => t.DeveloperUser)
-											   .Include(t => t.Project)
-											   .Include(t => t.SubmitterUser)
-											   .Include(t => t.TicketPriority)
-											   .Include(t => t.TicketStatus)
-											   .Include(t => t.TicketType)
-											   .ToListAsync();
+											            .Where(t => t.Project!.CompanyId == companyId && t.Project.Archived == false && t.Archived == false)
+											            .Include(t => t.DeveloperUser)
+											            .Include(t => t.Project)
+											            .Include(t => t.SubmitterUser)
+											            .Include(t => t.TicketPriority)
+											            .Include(t => t.TicketStatus)
+											            .Include(t => t.TicketType)
+											            .ToListAsync();
 
 			return tickets!;
 		}

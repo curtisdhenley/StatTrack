@@ -47,11 +47,14 @@ namespace StatTracker.Controllers
             // Get companyId
             int companyId = User.Identity!.GetCompanyId();
 
+            // Create an instance of a user
+            BTUser? user = await _userManager.GetUserAsync(User);
+
             Company? company = await _companyService.GetCompanyInfoAsync(companyId);
 
             List<Project>? projects = (await _projectService.GetProjectsAsync(companyId)).ToList();
 
-            List<Ticket>? tickets = (await _ticketService.GetTicketsAsync()).ToList();
+            List<Ticket>? tickets = (await _ticketService.GetTicketsAsync(companyId)).ToList();
 
             List<BTUser>? members = (await _companyService.GetMembersAsync(companyId)).ToList();
 

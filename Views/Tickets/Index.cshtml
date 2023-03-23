@@ -27,7 +27,7 @@
                     <h4 class="card-title">
                         <strong>Issue:</strong> <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
                     </h4>
-                    <p class="card-text">
+                    <p class="card-text" style="overflow-y:auto;height:100px;">
                         <strong>Details:</strong> @Html.DisplayFor(modelItem => ticket.Project!.Description)
                     </p>
                     <p class="card-text">

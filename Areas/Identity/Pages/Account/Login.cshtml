@@ -49,30 +49,31 @@
                             <div>
                                 <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                             </div>
-                        </form>                        
+                        </form> 
+                        <div class="row mt-3">
+                            <div class="col-12 text-center">
+                                <p>
+                                    <a id="forgot-password" asp-page="./ForgotPassword" class="btn btn-outline-secondary rounded-pill">Forgot your password?</a>
+                                </p>
+                                <p>
+                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-secondary rounded-pill">Register as a new user</a>
+                                </p>
+                                <p>
+                                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="btn btn-outline-secondary rounded-pill">Resend email confirmation</a>
+                                </p>
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
                     </div> <!-- end card-body -->
                 </div>
                 <!-- end card -->
 
-                <div class="row mt-3">
-                    <div class="col-12 text-center">
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword" class="btn btn-outline-secondary rounded-pill">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-secondary rounded-pill">Register as a new user</a>
-                        </p>
-                        <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="btn btn-outline-secondary rounded-pill">Resend email confirmation</a>
-                        </p>
-                    </div> <!-- end col -->
-                </div>
-                <!-- end row -->
+                
 
             </div> <!-- end col -->
             <div class="col-md-4 col=lg-6 col-xl-4">
                 <div class="text-center">
-                    <a href="index.html">
+                    <a href="#">
                         <img src="assets/images/logo-dark.png" alt="" height="22" class="mx-auto">
                     </a>
 
@@ -92,11 +93,11 @@
                                 <form class="" id="account" method="post">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-8 btn-block">
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoAdminEmail">Demo Admin</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoPMEmail">Demo PM</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoDevEmail">Demo Developer</button>
-                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 m-2" name="demoEmail" value="DemoSubEmail">Demo Submitter</button>
+                                            <div style="width: 100%;" class="col-8 btn-block text-center">
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 mb-2" name="demoEmail" value="DemoAdminEmail">Demo Admin</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 mb-2" name="demoEmail" value="DemoPMEmail">Demo PM</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10 mb-2" name="demoEmail" value="DemoDevEmail">Demo Developer</button>
+                                                <button type="submit" style="width:inherit;height:min-content" class="btn btn-primary p-10" name="demoEmail" value="DemoSubEmail">Demo Submitter</button>
                                             </div>
                                         </div>
                                     </div>

@@ -58,7 +58,7 @@ namespace StatTracker.Controllers
 
             Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
-            IEnumerable<BTUser>? developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            IEnumerable<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
 
             AssignDeveloperToTicket viewModel = new()
             {
@@ -118,12 +118,16 @@ namespace StatTracker.Controllers
         }
 
         // GET: Tickets
+        [Authorize]
         public async Task<IActionResult> Index(int? pageNum)
         {
             int pageSize = 9;
             int page = pageNum ?? 1;
 
-            IPagedList<Ticket> tickets = (await _ticketService.GetTicketsAsync()).ToPagedList(page, pageSize);
+            // Get companyId
+            int companyId = User.Identity!.GetCompanyId();
+
+            IPagedList<Ticket> tickets = (await _ticketService.GetTicketsAsync(companyId)).ToPagedList(page, pageSize);
 
             //IEnumerable<Ticket> tickets = await _ticketService.GetTicketsAsync();
 
@@ -382,14 +386,24 @@ namespace StatTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                TicketComment? comment = new TicketComment();
+
                 // display information based on user
-                ticketComment!.UserId = _userManager.GetUserId(User);
+                comment!.UserId = _userManager.GetUserId(User);
 
-                ticketComment.Created = DataUtility.GetPostGresDate(DateTime.Now);
+                comment.Created = DataUtility.GetPostGresDate(DateTime.Now);
 
-                Ticket? ticket = await _context.Tickets.FindAsync(ticketComment.TicketId);
+                comment.TicketId = ticketComment!.Id;
 
-                ticket?.Comments.Add(ticketComment);
+                comment.Comment = ticketComment.Comment;
+
+                //Ticket? ticket = await _context.Tickets.FindAsync(ticketComment.Id);
+
+                //ticket?.Comments.Add(ticketComment);
+
+                //await _ticketService.UpdateTicketAsync(ticket!);
+
+                _context.TicketComments.Add(comment);
 
                 await _context.SaveChangesAsync();
 
