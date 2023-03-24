@@ -32,7 +32,7 @@
     <div classxfont-weighteighteightgetainer-fluid">
 
         <!-- Info Pills -->
-        <div class="row mt-2">
+        <div class="row mt-3">
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <a asp-action="AllProjects" asp-controller="Projects" style="text-decoration:none">
                     <div class="card text-center bg-info">
@@ -49,9 +49,9 @@
                 <a asp-action="AllTickets" asp-controller="Tickets" style="text-decoration:none">
                     <div class="card text-center bg-secondary">
                         <div class="body">
-                            <div class="p-15 text-light">
+                            <div class="p-15">
 
-                                <h3>@Model.Tickets!.Count()</h3>
+                                <h3 class="text-light">@Model.Tickets!.Count()</h3>
                                 <span>Total Tickets</span>
                             </div>
                         </div>
@@ -71,9 +71,9 @@
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card text-center bg-dark">
                     <div class="body">
-                        <div class="p-15 text-light">
-                            <h3>
-                                <!-- TODO: review why this doesn't display ======================= -->
+                        <div class="p-15">
+                            <h3 class="text-light">
+                                <!-- COMPLETED: review why this doesn't display ======================= -->
                                 @(
                                     Model.Projects!.Count()
                                     + Model.Tickets!.Count()
@@ -89,10 +89,10 @@
 
 
 
-        <!-- TODO: review Morris Charts ================================ -->
         <div class="row gy-2">
             <div class="col-md-12 col">
-                <div class="row col-cols-2 mt-5 bg-secondary">
+                <div class="row col-cols-2 mt-5">
+                    <!-- Project Priority Charts -->
                     <div class="card col m-1 p-2">
                         <div class="card-body">
                             <h4 class="header-title mt-0 mb-3">Projects by Priority</h4>
@@ -100,7 +100,7 @@
                             <div class="widget-box-2">
                                 <!-- Morris: Donut -->
                                 <div class="col-md-12">
-                                    <div id="legend" class="donut-legend" style="font-size:x-small"></div>
+                                    <div id="projectLegend" class="donut-legend" style="font-size:x-small"></div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="chart chart-md" id="morrisProjectPriority"></div>
@@ -108,46 +108,21 @@
                             </div>
                         </div>
                     </div>
-                    @*<div class="card col m-1 p-2">
-                    <div class="card-body">
-                    <h5>Chart 2</h5>
-                    <p>[Projects]</p>
-                    </div>
-                    </div>*@
+                    <!-- Ticket Priority -->
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h4 class="header-title mt-0 mb-3">Projects by Priority</h4>
+                            <h4 class="header-title mt-0 mb-3">Tickets by Priority</h4>
 
                             <div class="widget-box-2">
                                 <!-- Morris: Donut -->
                                 <div class="col-md-12">
-                                    <div id="legend" class="donut-legend" style="font-size:x-small"></div>
+                                    <div id="ticketLegend" class="donut-legend" style="font-size:x-small"></div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="chart chart-md" id="morrisTicketPriority"></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @* <div class="card col m-1 p-2">
-                    <div class="card-body">
-                    <h5>Chart 4</h5>
-                    <p>[Tickets]</p>
-                    </div>
-                    </div>*@
-                </div>
-            </div>
-        </div>
-        <div class="row gy-2">
-            <div class="cols mt-5 bg-secondary">
-                <div class="card col m-1 p-2">
-                    <div class="card-body" style="height:380px">
-                        <h5>Chart 5</h5>
-                        <p>[Projects: Tickets vs Developers]</p>
-                        @{
-                            // TODO: Y NO WORK???? ===============================
-                            //Model.Tickets!.Count() - ((await RoleService.GetUsersInRoleAsync("Developer", btUser!.CompanyId)).Count())
-                        }
                     </div>
                 </div>
             </div>
@@ -158,175 +133,177 @@
         <div class="row">
             @* Projects Table *@
             <div class="col-md-6">
-                <div class="bg-secondary">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>Projects</h2>
-                        </div>
-                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
-                            <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Created</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                    </tr>
-                                </thead>
+                <div class="card m-1 p-2">
+                    <h2>Projects</h2>
+                    <hr />
+                    <div class="card-body" style="overflow-y:auto;height:600px;">
+                        <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Created</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
 
 
+                            <tbody>
                                 @foreach (Project project in Model.Projects!)
                                 {
-                                    <tbody>
-                                        <tr>
-                                            <td>@Html.DisplayFor(modelItem => project.Name)</td>
-                                            <td>@Html.DisplayFor(modelItem => project.Created)</td>
-                                            <td>@Html.DisplayFor(modelItem => project.StartDate)</td>
-                                            <td>@Html.DisplayFor(modelItem => project.EndDate)</td>
-                                        </tr>
-                                    </tbody>
+                                    <tr>
+                                        <td>
+                                            <a asp-action="Details" asp-controller="Projects" asp-route-id="@project.Id">@Html.DisplayFor(modelItem => project.Name)</a>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => project.Created)</td>
+                                        <td>@Html.DisplayFor(modelItem => project.StartDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => project.EndDate)</td>
+                                    </tr>
                                 }
-                            </table>
-                        </div>
-                        <div class="card-footer">
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             @* Tickets Table *@
             <div class="col-md-6">
-                <div class="bg-secondary">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>Tickets</h2>
-                        </div>
-                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
-                            <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Created</th>
-                                        <th>Developer</th>
-                                        <th>Submitter</th>
-                                    </tr>
-                                </thead>
+                <div class="card m-1 p-2">
+                    <h2>Tickets</h2>
+                    <hr />
+                    <div class="card-body" style="overflow-y:auto;height:600px;">
+                        <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Created</th>
+                                    <th>Developer</th>
+                                    <th>Submitter</th>
+                                </tr>
+                            </thead>
 
 
+                            <tbody>
                                 @foreach (Ticket ticket in Model.Tickets!)
                                 {
-                                    <tbody>
-                                        <tr>
-                                            <td>@Html.DisplayFor(modelItem => ticket.Title)</td>
-                                            <td>@Html.DisplayFor(modelItem => ticket.Created)</td>
-                                            <td>@Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)</td>
-                                            <td>@Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)</td>
-                                        </tr>
-                                    </tbody>
+                                    <tr>
+                                        <td>
+                                            <a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => ticket.Created)</td>
+                                        <td>@Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)</td>
+                                        <td>@Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)</td>
+                                    </tr>
                                 }
-                            </table>
-                        </div>
-                        <div class="card-footer">
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 ">
-                <div class="bg-dark">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>Members</h2>
-                            <hr />
-                        </div>
-                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
-                            @foreach (BTUser member in Model.Members!)
-                            {
-                                @* Loop over Company members. Display Name and Role *@
-                                @Html.DisplayFor(modelItem => member.FullName) <br />
-                                @Html.DisplayFor(modelItem => userRole)
-                                <hr />
-                            }
-                        </div>
+                <div class="card m-1 p-2">
+                    <h2>Members</h2>
+                    <hr />
+                    <div class="card-body" style="overflow-y:auto;height:300px;">
+                        <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                @foreach (BTUser member in Model.Members!)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => member.FullName)</td>
+                                        <td>@Html.DisplayFor(modelItem => userRole)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@section Scripts {
 
-@* Morris Donut Chart *@
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-<script>
+    @* Morris Donut Chart *@
+    <script>
 
-    // Project Priority
-    var morrisProjectPriorityDonutData = [{
-        label: "Low",
-        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Low)).Count()
-                                    }, {
-        label: "Medium",
-        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Medium)).Count()
-                                    }, {
-        label: "High",
-        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.High)).Count()
-                                    }, {
-        label: "Urgent",
-        value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Urgent)).Count()
-                                    }];
+        // Project Priority
+        var morrisProjectPriorityDonutData = [{
+            label: "Low",
+            value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Low)).Count()
+                                                                    }, {
+            label: "Medium",
+            value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Medium)).Count()
+                                                                    }, {
+            label: "High",
+            value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.High)).Count()
+                                                                    }, {
+            label: "Urgent",
+            value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Urgent)).Count()
+                                                                    }];
 
-    // Ticket Priority
-    var morrisTicketPriorityDonutData = [{
-        label: "Low",
-        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Low)).Count()
-                                }, {
-        label: "Medium",
-        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Medium)).Count()
-                                }, {
-        label: "High",
-        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.High)).Count()
-                                }, {
-        label: "Urgent",
-        value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Urgent)).Count()
-                                }];
+        // Ticket Priority
+        var morrisTicketPriorityDonutData = [{
+            label: "Low",
+            value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Low)).Count()
+                                                                }, {
+            label: "Medium",
+            value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Medium)).Count()
+                                                                }, {
+            label: "High",
+            value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.High)).Count()
+                                                                }, {
+            label: "Urgent",
+            value: @Model.Tickets!.Where(t => t.TicketPriority!.Name == nameof(BTTicketPriorities.Urgent)).Count()
+                                                                }];
 
 
-    /*
-    Morris: Donut
-    */
-    if ($('#morrisProjectPriority').get(0)) {
-        var donutChart = Morris.Donut({
-            resize: true,
-            element: 'morrisProjectPriority',
-            data: morrisProjectPriorityDonutData,
-            colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
-        });
+        /*
+        Morris: Donut
+        */
+        if ($('#morrisProjectPriority').get(0)) {
+            var donutChart = Morris.Donut({
+                resize: true,
+                element: 'morrisProjectPriority',
+                data: morrisProjectPriorityDonutData,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
 
-        donutChart.options.data.forEach(function (label, i) {
-            var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
-            legendItem.find('span')
-                .css('backgroundColor', donutChart.options.colors[i])
-                .css('width', '20px')
-                .css('display', 'inline-block')
-                .css('margin', '10px');
-            $('#legend').append(legendItem)
-        });
-    };
+            donutChart.options.data.forEach(function (label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#projectLegend').append(legendItem)
+            });
+        };
 
-    if ($('#morrisTicketPriority').get(0)) {
-        var donutChart = Morris.Donut({
-            resize: true,
-            element: 'morrisTicketPriority',
-            data: morrisTicketPriorityDonutData,
-            colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
-        });
+        if ($('#morrisTicketPriority').get(0)) {
+            var donutChart = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketPriority',
+                data: morrisTicketPriorityDonutData,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
 
-        donutChart.options.data.forEach(function (label, i) {
-            var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
-            legendItem.find('span')
-                .css('backgroundColor', donutChart.options.colors[i])
-                .css('width', '20px')
-                .css('display', 'inline-block')
-                .css('margin', '10px');
-            $('#legend').append(legendItem)
-        });
-    };
-</script>
+            donutChart.options.data.forEach(function (label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#ticketLegend').append(legendItem)
+            });
+        };
+    </script>
+}

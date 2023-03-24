@@ -106,7 +106,7 @@ namespace StatTracker.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null, string demoEmail = null)
         {
-            returnUrl ??= Url.Content("~/Home/AdmintoIndex");
+            returnUrl ??= Url.Content("~/Home/Dashboard");
 
             if (!string.IsNullOrEmpty(demoEmail))
             {

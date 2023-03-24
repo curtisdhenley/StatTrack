@@ -212,17 +212,17 @@
                             </thead>
 
 
-                            @foreach (Ticket ticket in Model.Tickets!)
-                            {
-                                <tbody>
+                            <tbody>
+                                @foreach (Ticket ticket in Model.Tickets!)
+                                {
                                     <tr>
                                         <td><a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a></td>
                                         <td>@Html.DisplayFor(modelItem => ticket.Created)</td>
                                         <td>@Html.DisplayFor(modelItem => ticket.DeveloperUser!.FullName)</td>
                                         <td>@Html.DisplayFor(modelItem => ticket.SubmitterUser!.FullName)</td>
                                     </tr>
-                                </tbody>
-                            }
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </div>

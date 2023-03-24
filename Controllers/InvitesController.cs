@@ -44,7 +44,7 @@ namespace StatTracker.Controllers
         // GET: Invites
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Invites.Include(i => i.Company).Include(i => i.Invitee).Include(i => i.Invitor!.FullName).Include(i => i.Project);
+            var applicationDbContext = _context.Invites.Include(i => i.Company).Include(i => i.Invitee).Include(i => i.Invitor).Include(i => i.Project);
             return View(await applicationDbContext.ToListAsync());
         }
 
