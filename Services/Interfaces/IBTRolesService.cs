@@ -9,9 +9,9 @@ namespace StatTracker.Services.Interfaces
 
         public Task<List<IdentityRole>> GetRolesAsync();
 
-        public Task<IEnumerable<string?>> GetUserRolesAsync(BTUser? user);
+        public Task<IEnumerable<string>> GetUserRolesAsync(BTUser? user);
 
-        public Task<List<BTUser?>> GetUsersInRoleAsync(string? roleName, int? companyId);
+        public Task<List<BTUser>> GetUsersInRoleAsync(string? roleName, int? companyId);
 
         public Task<bool> IsUserInRoleAsync(BTUser? member, string? roleName);
 

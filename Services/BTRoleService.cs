@@ -47,11 +47,11 @@ namespace StatTracker.Services
             }
         }
 
-        public async Task<IEnumerable<string?>> GetUserRolesAsync(BTUser? user)
+        public async Task<IEnumerable<string>> GetUserRolesAsync(BTUser? user)
         {
             try
             {
-                IEnumerable<string?> result = await _userManager.GetRolesAsync(user!);
+                IEnumerable<string> result = await _userManager.GetRolesAsync(user!);
 
                 return result;
             }
@@ -66,8 +66,8 @@ namespace StatTracker.Services
         {
             try
             {
-                List<BTUser> result = new();
-                List<BTUser> users = new();
+                List<BTUser>? result = new();
+                List<BTUser>? users = new();
 
                 users = (await _userManager.GetUsersInRoleAsync(roleName!)).ToList();
                 result = users.Where(u => u.CompanyId == companyId).ToList();

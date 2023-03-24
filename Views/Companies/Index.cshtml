@@ -4,6 +4,7 @@
 @using StatTracker.Services.Interfaces;
 
 @inject IBTFileService _btFileService
+@inject IBTRolesService _btRoleService
 
 @{
     ViewData["Title"] = "Index";
@@ -11,7 +12,107 @@
 
 <h1>Index</h1>
 
-<p>
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="bg-picture card-body">
+                <div class="d-flex align-items-top">
+                    <img class="img-fluid border rounded-3 m-2" style="max-height: 250px;" src="@_btFileService.ConvertByteArrayToFile(Model.ImageFileData!, Model.ImageFileType!, (int)DefaultImage.CompanyImage)" alt="Company Image" id="companyImage">
+                        @* class="flex-shrink-0 rounded-circle avatar-xl img-thumbnail float-start me-3" alt="profile-image">*@
+
+                    <div class="flex-grow-1 overflow-hidden">
+                        <h4 class="m-0">@Html.DisplayNameFor(model => model.Name)</h4>
+                        <p class="font-13">@Html.DisplayNameFor(model => model.Description)</p>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="dropdown float-end">
+                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a asp-action="Create" asp-controller="Invites" asp-route-id="@Model.Id" class="dropdown-item">Invite Members</a>
+                        <a asp-action="Index" asp-controller="Invites" asp-route-id="@Model.Id" class="dropdown-item">Manage Members</a>
+                    </div>
+                </div>
+                <!-- Company Members -->
+                <h4 class="header-title mt-0 mb-3">Team Members</h4>
+                <ul class="list-group mb-0 user-list">
+                    @foreach (BTUser member in Model.Members)
+                    {
+                    <li class="list-group-item">
+                        <a href="#" class="user-list-item">
+                            <div class="user avatar-sm float-start me-2">
+                                    <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.ProjectImage)">
+                            </div>
+                            <div class="user-desc">
+                                <h5 class="name mt-0 mb-1">@member.FullName</h5>
+                                    @{
+
+                                        string? userRole = (await _btRoleService.GetUserRolesAsync(member)).FirstOrDefault();
+                                    }
+                                    @if (userRole == null)
+                                    {
+                                        <p class="desc text-muted mb-0 font-12"><strong>ROLE NOT ASSIGNED</strong></p>
+                                    }
+                                    <p class="desc text-muted mb-0 font-12">@userRole</p>
+                            </div>
+                        </a>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- Company Projects -->
+        <div class="card">
+            <div class="card-body">
+                <div class="dropdown float-end">
+                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a asp-action="Index" asp-controller="Projects" asp-route-id="@Model.Id" class="dropdown-item">Projects</a>
+                        <!-- item-->
+                        <a asp-action="Create" asp-controller="Projects" asp-route-id="@Model.Id" class="dropdown-item">Create a new Project</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3"><i class="mdi mdi-notification-clear-all me-1"></i> Projects Quickview</h4>
+
+                <ul class="list-group mb-0 user-list">
+                    @foreach (Project project in Model.Projects)
+                    {   
+                    <li class="list-group-item">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="user-list-item">
+                            <div class="user float-start me-3">
+                                <i class="mdi mdi-circle text-primary"></i>
+                            </div>
+                            <div class="user-desc overflow-hidden">
+                                <h5 class="name mt-0 mb-1">@project.Name</h5>
+                                <span class="desc text-muted font-12 text-truncate d-block">@project.StartDate - @project.EndDate</span>
+                            </div>
+                        </a>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@*<p>
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
@@ -53,6 +154,6 @@
                 <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
             </td>
         </tr>
-
     </tbody>
 </table>
+*@
