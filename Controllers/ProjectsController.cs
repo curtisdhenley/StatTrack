@@ -191,7 +191,7 @@ namespace StatTracker.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["CompanyId"] = new SelectList(await _companyService.GetCompaniesAsync(), "Id", "Name");
-            ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Id");
+            ViewData["ProjectPriorityId"] = new SelectList(await _projectService.GetProjectPrioritiesAsync(), "Id", "Name");
 
             Project project = new Project();
             project.StartDate = DataUtility.GetPostGresDate(DateTime.UtcNow);
