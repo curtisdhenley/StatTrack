@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StatTracker.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using StatTracker.Services.Interfaces;
 
 namespace StatTracker.Areas.Identity.Pages.Account.Manage
 {
@@ -17,13 +19,16 @@ namespace StatTracker.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<BTUser> _userManager;
         private readonly SignInManager<BTUser> _signInManager;
+        private readonly IBTFileService _btFileService;
 
         public IndexModel(
             UserManager<BTUser> userManager,
-            SignInManager<BTUser> signInManager)
+            SignInManager<BTUser> signInManager,
+            IBTFileService btFileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _btFileService = btFileService;
         }
 
         /// <summary>
@@ -52,6 +57,24 @@ namespace StatTracker.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
+            [Display(Name = "First Name")]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+            public string? FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and max {1} characters long.", MinimumLength = 2)]
+            public string? LastName { get; set; }
+
+            [NotMapped]
+            [Display(Name = "Full Name")]
+            public string FullName { get { return $"{FirstName} {LastName}"; } }
+
+            public byte[] ImageFileData { get; set; }
+
+            public string ImageFileType { get; set; }
+
+            [NotMapped]
+            public IFormFile? ImageFormFile { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -70,7 +93,10 @@ namespace StatTracker.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ImageFileData = user.ImageFileData
             };
         }
 
@@ -99,6 +125,19 @@ namespace StatTracker.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+
+            // custom code
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+
+            if (Input.ImageFormFile != null)
+            {
+                user.ImageFileData = await _btFileService.ConvertFileToByteArrayAsync(Input.ImageFormFile);
+                user.ImageFileType = Input.ImageFormFile.ContentType;
+            }
+
+            await _userManager.UpdateAsync(user);
+            // end custom code
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
