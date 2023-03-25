@@ -91,8 +91,8 @@
 
         <div class="row gy-2">
             <div class="col-md-12 col">
-                <div class="row col-cols-2 mt-5">
-                    <!-- Project Priority Charts -->
+                <div class="row col-cols-3 mt-3">
+                    <!-- Project Priority Chart -->
                     <div class="card col m-1 p-2">
                         <div class="card-body">
                             <h4 class="header-title mt-0 mb-3">Projects by Priority</h4>
@@ -108,7 +108,23 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Ticket Priority -->
+                    <!-- Ticket Status Chart -->
+                    <div class="card col m-1 p-2">
+                        <div class="card-body">
+                            <h4 class="header-title mt-0 mb-3">Tickets by Status</h4>
+
+                            <div class="widget-box-2">
+                                <!-- Morris: Donut -->
+                                <div class="col-md-12">
+                                    <div id="statusLegend" class="donut-legend" style="font-size:x-small"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="chart chart-md" id="morrisTicketStatus"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ticket Priority Chart -->
                     <div class="card col m-1 p-2">
                         <div class="card-body">
                             <h4 class="header-title mt-0 mb-3">Tickets by Priority</h4>
@@ -129,7 +145,7 @@
         </div>
     </div>
     <hr />
-    <div class="mt-5 ">
+    <div class="mt-3">
         <div class="row">
             @* Projects Table *@
             <div class="col-md-6">
@@ -249,6 +265,21 @@
             value: @Model.Projects!.Where(p => p.ProjectPriority!.Name == nameof(BTProjectPriorities.Urgent)).Count()
                                                                     }];
 
+        // Ticket Status
+        var morrisTicketStatusDonutData = [{
+            label: "New",
+            value: @Model.Tickets!.Where(p => p.TicketStatus!.Name == nameof(BTTicketStatuses.New)).Count()
+                                                                            }, {
+            label: "Testing",
+            value: @Model.Tickets!.Where(p => p.TicketStatus!.Name == nameof(BTTicketStatuses.Testing)).Count()
+                                                                            }, {
+            label: "Resolved",
+            value: @Model.Tickets!.Where(p => p.TicketStatus!.Name == nameof(BTTicketStatuses.Resolved)).Count()
+                                                                            }, {
+            label: "Development",
+            value: @Model.Tickets!.Where(p => p.TicketStatus!.Name == nameof(BTTicketStatuses.Development)).Count()
+                                                                            }];
+
         // Ticket Priority
         var morrisTicketPriorityDonutData = [{
             label: "Low",
@@ -284,6 +315,25 @@
                     .css('display', 'inline-block')
                     .css('margin', '10px');
                 $('#projectLegend').append(legendItem)
+            });
+        };
+
+        if ($('#morrisTicketStatus').get(0)) {
+            var donutChart = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketStatus',
+                data: morrisTicketStatusDonutData,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
+
+            donutChart.options.data.forEach(function (label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '5px');
+                $('#statusLegend').append(legendItem)
             });
         };
 
