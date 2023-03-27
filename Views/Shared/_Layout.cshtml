@@ -1,14 +1,20 @@
-﻿@using StatTracker.Services.Interfaces
+﻿@using StatTracker.Extensions;
+@using StatTracker.Services.Interfaces
 @using StatTracker.Models.Enums
 @using Microsoft.AspNetCore.Identity;
 
 @inject UserManager<BTUser> _UserManager;
 @inject IBTRolesService _btRoleService;
 @inject IBTFileService _btFileService;
+@inject IBTProjectService _btProjectService;
+@inject IBTTicketService _btTicketService;
 
 @{
     BTUser? user = await _UserManager.GetUserAsync(User);
     string? userRole = (await _btRoleService.GetUserRolesAsync(user)).FirstOrDefault();
+    int companyId = User.Identity!.GetCompanyId();
+    Project? project = (await _btProjectService.GetProjectsAsync(companyId)).FirstOrDefault();
+    Ticket? ticket = await _btTicketService.GetTicketAsync();
 }
 
 <!DOCTYPE html>
@@ -406,21 +412,6 @@
                                     <li>
                                         <a class="dropdown-item" asp-controller="Projects" asp-action="Create">
                                             Create New Project
-                                            <span class="mdi mdi-chevron-right"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="AssignPM" asp-controller="Projects" asp-route-id="@user.Id">
-                                            Manage Project Manager
-                                            <span class="mdi mdi-chevron-right"></span>
-                                        </a>
-                                    </li>
-                                }
-                                @if (userRole == nameof(BTRoles.Admin) || userRole == nameof(BTRoles.ProjectManager))
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@user.Id">
-                                            Manage Project Users
                                             <span class="mdi mdi-chevron-right"></span>
                                         </a>
                                     </li>

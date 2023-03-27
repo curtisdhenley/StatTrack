@@ -103,10 +103,10 @@ namespace StatTracker.Controllers
 
             Project? project = await _projectService.GetProjectByIdAsync(id, companyId);
 
-            List<BTUser?> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
-            List<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            List<BTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
+            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
 
-            List<BTUser?> userList = submitters.Concat(developers).ToList();
+            List<BTUser> userList = submitters.Concat(developers).ToList();
 
             List<string> currentMembers = project.Members.Select(m => m.Id).ToList();
 
