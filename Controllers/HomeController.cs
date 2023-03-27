@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using StatTracker.Data;
 using StatTracker.Extensions;
 using StatTracker.Models;
 using StatTracker.Models.ViewModels;
+using StatTracker.Services;
 using StatTracker.Services.Interfaces;
 using System.Diagnostics;
 
@@ -20,8 +22,9 @@ namespace StatTracker.Controllers
         private readonly IBTRolesService _rolesService;
         private readonly IBTCompanyService _companyService;
         private readonly IBTTicketService _ticketService;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger, IBTCompanyService companyService, IBTRolesService rolesService, IBTProjectService projectService, IBTFileService btFileService, UserManager<BTUser> userManager, IBTTicketService ticketService)
+        public HomeController(ILogger<HomeController> logger, IBTCompanyService companyService, IBTRolesService rolesService, IBTProjectService projectService, IBTFileService btFileService, UserManager<BTUser> userManager, IBTTicketService ticketService, IEmailSender emailSender)
         {
             _logger = logger;
             _companyService = companyService;
@@ -30,6 +33,40 @@ namespace StatTracker.Controllers
             _btFileService = btFileService;
             _userManager = userManager;
             _ticketService = ticketService;
+            _emailSender = emailSender;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ContactMe(EmailData emailData)
+        {
+            if (ModelState.IsValid)
+            {
+                string? swalMessage = string.Empty;
+
+                try
+                {
+                    emailData.EmailSubject = ($"{emailData.EmailSenderName} Sent You A Message From StatTrack");
+
+                    emailData.EmailBody = ($"""<strong>{emailData.EmailSenderName}</strong> sent a message:<br><br>{emailData.EmailBody}<br><br><strong>Their email is:<a href="mailto:{emailData.EmailSenderAddress}">{emailData.EmailSenderAddress}</a></strong>""");
+
+                    await _emailSender.SendEmailAsync("henleydcurtis@gmail.com", emailData.EmailSubject, emailData.EmailBody!);
+
+                    swalMessage = "Sucess! Your email has been sent.";
+
+                    return RedirectToAction(nameof(LandingPage), new { swalMessage });
+                }
+                catch (Exception)
+                {
+                    swalMessage = "Error! Your Email Failed to Send.";
+
+                    return RedirectToAction(nameof(LandingPage), new { swalMessage });
+
+                    throw;
+                }
+            }
+
+            return View(emailData);
         }
 
         public IActionResult Index()
@@ -70,8 +107,9 @@ namespace StatTracker.Controllers
 		}
 
         [AllowAnonymous]
-        public IActionResult LandingPage()
+        public IActionResult LandingPage(string? swalMessage = null)
         {
+            ViewData["SwalMessage"] = swalMessage;
             return View();
         }
 

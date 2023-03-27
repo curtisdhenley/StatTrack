@@ -410,7 +410,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-action="AssignPM" asp-controller="Projects">
+                                        <a class="dropdown-item" asp-action="AssignPM" asp-controller="Projects" asp-route-id="@user.Id">
                                             Manage Project Manager
                                             <span class="mdi mdi-chevron-right"></span>
                                         </a>
@@ -419,7 +419,7 @@
                                 @if (userRole == nameof(BTRoles.Admin) || userRole == nameof(BTRoles.ProjectManager))
                                 {
                                     <li>
-                                        <a class="dropdown-item" asp-action="AssignProjectMembers" asp-controller="Projects">
+                                        <a class="dropdown-item" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@user.Id">
                                             Manage Project Users
                                             <span class="mdi mdi-chevron-right"></span>
                                         </a>
