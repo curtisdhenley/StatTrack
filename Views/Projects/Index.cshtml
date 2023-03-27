@@ -5,19 +5,29 @@
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList.Web.Common;
+@using StatTracker.Extensions;
+@using Microsoft.AspNetCore.Identity;
 
 @inject IBTFileService _btFileService
+@inject UserManager<BTUser> _UserManager;
+@inject IBTRolesService _btRoleService;
+@inject IBTFileService _btFileService;
+@inject IBTProjectService _btProjectService;
 
 @{
     ViewData["Title"] = "Index";
+    BTUser? btUser = await _UserManager.GetUserAsync(User);
 }
 
+@if ((await _btRoleService.GetUserRolesAsync(btUser)).FirstOrDefault() == nameof(BTRoles.Admin))
+{
 <div class="row">
     <div class="col-sm-4">
         <a asp-controller="Projects" asp-action="Create" class="btn btn-purple rounded-pill w-md waves-effect waves-light mb-3"><i class="mdi mdi-plus"></i> Create Project</a>
     </div>
 </div>
-<!-- end row -->
+<!-- end row -->    
+}
 
 
 <div class="row">
