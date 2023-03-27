@@ -79,7 +79,7 @@
                                     {
                                         <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="@member.FullName"> <img class="rounded-circle avatar-sm" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.BTUserImage)"> </a>
                                     }
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)))
                                     {
                                         <a asp-action="AssignProjectMembers" asp-route-id="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign a new member">
                                             <span class="add-new-plus"><i class="mdi mdi-plus"></i></span>

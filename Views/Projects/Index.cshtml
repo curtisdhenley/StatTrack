@@ -34,12 +34,12 @@
     @foreach (Project project in Model)
     {
         <div class="col-xl-4">
-            <div class="card">
+            <div class="card" style="overflow-y:auto;height:500px;">
                 <div class="card-body project-box">
                     <div class="badge bg-success float-end">@project.ProjectPriority!.Name</div>
                     <h4 class="mt-0"><a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="text-dark">@Html.DisplayFor(modelItem => project.Name)</a></h4>
-                    <p class="text-muted font-13">
-                        @Html.DisplayFor(modelItem => project.Description)
+                    <p class="text-muted font-13" style="overflow-y:auto;height:300px;">
+                        @Html.Raw(project.Description)
                     </p>
 
                     <div class="project-members mb-2">

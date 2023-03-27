@@ -187,7 +187,7 @@ namespace StatTracker.Controllers
             return View(project);
         }
 
-        // GET: Projects/AddTicketComment
+        // GET: Projects/
         public async Task<IActionResult> Create()
         {
             ViewData["CompanyId"] = new SelectList(await _companyService.GetCompaniesAsync(), "Id", "Name");
@@ -199,7 +199,7 @@ namespace StatTracker.Controllers
             return View(project);
         }
 
-        // POST: Projects/AddTicketComment
+        // POST: Projects/
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -210,6 +210,7 @@ namespace StatTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                int companyId = User.Identity!.GetCompanyId();
                 // display information based on company
                 //project.CompanyId = _userManager.GetUserId(User);
 
@@ -223,6 +224,8 @@ namespace StatTracker.Controllers
                     project.ImageFileData = await _btFileService.ConvertFileToByteArrayAsync(project.ImageFormFile);
                     project.ImageFileType = project.ImageFormFile.ContentType;
                 }
+
+                project.CompanyId = companyId;
 
                 await _projectService.AddProjectAsync(project);
 
