@@ -156,7 +156,7 @@ namespace StatTracker.Controllers
             return View(ticket);
         }
 
-        // GET: Tickets/AddTicketComment
+        // GET: Tickets
         public IActionResult Create()
         {
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");

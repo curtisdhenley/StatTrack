@@ -274,7 +274,7 @@
 
             <!-- LOGO -->
             <div class="logo-box">
-                <a href="#" class="logo logo-light text-center">
+                <a asp-controller="Home" asp-action="Dashboard" class="logo logo-light text-center">
                     <span class="logo-sm">
                         <img src="~/img/logos/stat-track-high-resolution-logo-white-on-transparent-background.png" alt="" height="40">
                     </span>
@@ -282,7 +282,7 @@
                         <img src="~/img/logos/stat-track-high-resolution-logo-white-on-transparent-background.png" alt="" height="40">
                     </span>
                 </a>
-                <a href="#" class="logo logo-dark text-center">
+                <a asp-controller="Home" asp-action="Dashboard" class="logo logo-dark text-center">
                     <span class="logo-sm">
                         <img src="~/img/logos/stat-track-high-resolution-logo-color-on-transparent-background.png" alt="" height="40">
                     </span>
@@ -414,17 +414,17 @@
                                         <span class="mdi mdi-chevron-right"></span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" asp-action="unassignedTickets" asp-controller="Tickets">
-                                        Unassigned Tickets
-                                        <span class="mdi mdi-chevron-right"></span>
-                                    </a>
-                                </li>
                                 @if (userRole == nameof(BTRoles.Admin) || userRole == nameof(BTRoles.ProjectManager))
                                 {
                                     <li>
                                         <a class="dropdown-item" asp-controller="Tickets" asp-action="Create">
                                             Create New Ticket
+                                            <span class="mdi mdi-chevron-right"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-action="unassignedTickets" asp-controller="Tickets">
+                                            Unassigned Tickets
                                             <span class="mdi mdi-chevron-right"></span>
                                         </a>
                                     </li>
