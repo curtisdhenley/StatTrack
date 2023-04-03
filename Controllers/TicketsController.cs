@@ -46,8 +46,9 @@ namespace StatTracker.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, ProjectManager")]
-        public async Task<IActionResult> AssignDeveloperToTicket(int? id)
+        public async Task<IActionResult> AssignDev(int? id)
         {
+            // TODO: fix null error when Get Method is called
             if (id == null)
             {
                 return NotFound();
@@ -59,12 +60,13 @@ namespace StatTracker.Controllers
             Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
             IEnumerable<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            BTUser? currentDev = await _ticketService.GetDeveloperAsync(id);
 
-            AssignDeveloperToTicket viewModel = new()
+            AssignDeveloperToTicketViewModel viewModel = new()
             {
                 Ticket = ticket,
-                DeveloperList = new SelectList(developers, "Id", "FullName", ticket?.DeveloperUserId),
-                DeveloperId = ticket?.DeveloperUserId
+                DeveloperList = new SelectList(developers, "Id", "FullName", currentDev?.Id),
+                DeveloperId = currentDev?.Id
             };
 
             return View(viewModel);
@@ -72,7 +74,7 @@ namespace StatTracker.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, ProjectManager")]
-        public async Task<IActionResult> AssignDeveloperToTicket(AssignDeveloperToTicket viewModel)
+        public async Task<IActionResult> AssignDev(AssignDeveloperToTicketViewModel viewModel)
         {
             if (viewModel.DeveloperId != null)
             {
@@ -82,13 +84,15 @@ namespace StatTracker.Controllers
 
                 try
                 {
-                    //await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperList, viewModel.Ticket!.Id!);
+                    await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperId, viewModel.Ticket!.Id!);
                 }
                 catch (Exception)
                 {
+                    ModelState.AddModelError("DeveloperId", "No Developer chosen. Please select a Developer.");
 
                     throw;
                 }
+
 
                 string? userId = _userManager.GetUserId(User);
                 Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(viewModel.Ticket?.Id, companyId);
@@ -109,6 +113,12 @@ namespace StatTracker.Controllers
 
                 await _notificationService.AddNotificationAsync(notification);
                 await _notificationService.SendEmailNotificationAsync(notification, "New Developer Assigned To Ticket");
+
+                IEnumerable<BTUser>? developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+                BTUser? currentDev = await _ticketService.GetDeveloperAsync(viewModel.Ticket?.Id);
+                viewModel.Ticket = await _ticketService.GetTicketByIdAsync(viewModel.Ticket?.Id, companyId);
+                viewModel.DeveloperList = new SelectList(developers, "Id", "FullName", currentDev?.Id);
+                viewModel.DeveloperId = currentDev?.Id;
 
 
                 return RedirectToAction(nameof(Details), new { id = viewModel.Ticket?.Id });

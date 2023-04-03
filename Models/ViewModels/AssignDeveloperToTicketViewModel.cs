@@ -2,7 +2,7 @@
 
 namespace StatTracker.Models.ViewModels
 {
-    public class AssignDeveloperToTicket
+    public class AssignDeveloperToTicketViewModel
     {
         public Ticket? Ticket { get; set; }
         public SelectList? DeveloperList { get; set; }

@@ -7,6 +7,7 @@ using StatTracker.Models;
 using StatTracker.Models.Enums;
 using StatTracker.Services.Interfaces;
 using System.ComponentModel.Design;
+using Project = StatTracker.Models.Project;
 
 namespace StatTracker.Services
 {
@@ -26,20 +27,31 @@ namespace StatTracker.Services
             _projectService = projectService;
         }
 
-        public async Task<bool> AddDeveloperToTicketAsync(BTUser user, int? ticketId)
+        public async Task<bool> AddDeveloperToTicketAsync(string? userId, int? ticketId)
         {
             try
             {
-                Ticket? ticket = await GetTicketByIdAsync(ticketId!.Value);
+                BTUser? currentDev = await GetDeveloperAsync(ticketId);
+                BTUser? selectedDev = await _context.Users.FindAsync(userId);
 
-                if (ticket.DeveloperUserId != null)
+                // Remove the current PM
+                if (currentDev != null)
                 {
-                    ticket.DeveloperUser = user;
-                    await _context.SaveChangesAsync();
-                    return true;
+                    await RemoveDeveloperAsync(ticketId);
                 }
 
-                return false;
+                // Add new/selected PM
+                try
+                {
+                    Project? project = (await _projectService.GetProjectsAsync(selectedDev!.CompanyId)).FirstOrDefault();
+                    await _projectService.AddMemberToProjectAsync(selectedDev!, project!.Id);
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
@@ -89,9 +101,25 @@ namespace StatTracker.Services
 			throw new NotImplementedException();
 		}
 
-        public Task<BTUser> GetDeveloperAsync(int? ticketId)
+        public async Task<BTUser> GetDeveloperAsync(int? ticketId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Ticket? ticket = await _context.Tickets.Include(t => t.DeveloperUser).SingleOrDefaultAsync(t => t.Id == ticketId);
+
+                    if (await _rolesService.IsUserInRoleAsync(ticket!.DeveloperUser, nameof(BTRoles.Developer)))
+                    {
+                        return ticket.DeveloperUser!;
+                    }
+                
+
+                return null!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         //      public async Task<BTUser> GetDeveloperAsync(int? ticketId)
@@ -304,7 +332,26 @@ namespace StatTracker.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task UpdateTicketAsync(Ticket ticket)
+        public async Task RemoveDeveloperAsync(int? ticketId)
+        {
+            try
+            {
+                Ticket? ticket = await _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.ProjectId).FirstOrDefaultAsync(t => t.Id == ticketId);
+
+                    if (await _rolesService.IsUserInRoleAsync(ticket!.DeveloperUser, nameof(BTRoles.Developer)))
+                    {
+                        await _projectService.RemoveMemberFromProjectAsync(ticket.DeveloperUser!, ticket.ProjectId);
+                    }
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task UpdateTicketAsync(Ticket ticket)
 		{
 			_context.Update(ticket);
 			await _context.SaveChangesAsync();

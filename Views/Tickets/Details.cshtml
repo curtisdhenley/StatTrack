@@ -76,7 +76,10 @@
                                     {
                                         <a href="#"> <img class="rounded-circle avatar-sm" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.BTUserImage)" title="@member.FullName"> </a>
                                     }
-                                    <a href="#"><span class="add-new-plus"><i class="mdi mdi-plus"></i> </span></a>
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                    {   
+                                    <a asp-action="AssignDev" asp-controller="Tickets" asp-route-id="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign A Developer"><span class="add-new-plus"><i class="mdi mdi-plus"></i> </span></a>
+                                    }
                                 </div>
                             </div>
                             @* TODO: get ticket attachments working ==================== *@

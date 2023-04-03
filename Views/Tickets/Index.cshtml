@@ -68,12 +68,17 @@
                 <div class="card-footer">
                     @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                     {
-                    <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@ticket.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
-                        <i class="bi bi-trash-fill"></i>
-                    </a>
+                        <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-warning rounded-pill waves-effect waves-light">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@ticket.Id" class="btn btn-danger rounded-pill waves-effect waves-light">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                        <a asp-action="AssignDev" asp-controller="Tickets" asp-route-id="@ticket.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign A Developer">
+                            <span class="add-new-plus">
+                                <i class="mdi mdi-plus"></i>
+                            </span>
+                        </a>
                     }
                     <a asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-info rounded-pill waves-effect waves-light">
                         <i class="bi bi-info-circle-fill"></i>

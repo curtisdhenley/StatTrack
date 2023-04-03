@@ -79,7 +79,7 @@ namespace StatTracker.Controllers
             // Get companyId
             int companyId = User.Identity!.GetCompanyId();
 
-            IEnumerable<BTUser?> projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+            IEnumerable<BTUser>? projectManagers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
             BTUser? currentPM = await _projectService.GetProjectManagerAsync(viewModel.Project?.Id);
             viewModel.Project = await _projectService.GetProjectByIdAsync(viewModel.Project?.Id, companyId);
             viewModel.PMList = new SelectList(projectManagers, "Id", "FullName", currentPM?.Id);

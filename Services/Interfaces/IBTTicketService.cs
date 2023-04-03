@@ -60,8 +60,9 @@ namespace StatTracker.Services.Interfaces
         public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
         public Task<BTUser> GetDeveloperAsync(int? ticketId);
         public Task<BTUser> GetSubmitterAsync(int? ticketId);
-        public Task<bool> AddDeveloperToTicketAsync(BTUser user, int? ticketId);
+        public Task<bool> AddDeveloperToTicketAsync(string? userId, int? ticketId);
         public Task<Ticket> GetTicketAsNoTrackingAsync(int? ticketId, int? companyId);
+        public Task RemoveDeveloperAsync(int? ticketId);
 
         #endregion
     }

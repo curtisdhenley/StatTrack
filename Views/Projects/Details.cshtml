@@ -28,6 +28,8 @@
                     <div class="card">
                         <div class="card-body task-detail">
                             <div class="dropdown float-end">
+                                @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                {
                                 <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
@@ -39,6 +41,7 @@
                                     <!-- item-->
                                     <a asp-action="Create" asp-controller="Tickets" asp-route-id="@Model?.Id" class="dropdown-item">Create New Ticket</a>
                                 </div>
+                                }
                             </div>
                             <div class="d-flex mb-3">
                                 <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(Model!.ImageFileData!, Model!.ImageFileType!, (int)DefaultImage.ProjectImage)">
@@ -79,7 +82,7 @@
                                     {
                                         <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="@member.FullName"> <img class="rounded-circle avatar-sm" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.BTUserImage)"> </a>
                                     }
-                                    @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                                     {
                                         <a asp-action="AssignProjectMembers" asp-route-id="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign a new member">
                                             <span class="add-new-plus"><i class="mdi mdi-plus"></i></span>
