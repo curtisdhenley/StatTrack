@@ -21,7 +21,7 @@ namespace StatTracker.Services
         {
             try
             {
-                bool result = (await _userManager.AddToRoleAsync(user, roleName)).Succeeded;
+                bool result = (await _userManager.AddToRoleAsync(user!, roleName!)).Succeeded;
                 return result;
             }
             catch (Exception)
@@ -85,7 +85,7 @@ namespace StatTracker.Services
         {
             try
             {
-                bool result = await _userManager.IsInRoleAsync(member, roleName);
+                bool result = await _userManager.IsInRoleAsync(member!, roleName!);
 
                 return result;
             }

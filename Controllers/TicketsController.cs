@@ -59,7 +59,7 @@ namespace StatTracker.Controllers
 
             Ticket? ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
-            IEnumerable<BTUser?> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            IEnumerable<BTUser>? developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
             BTUser? currentDev = await _ticketService.GetDeveloperAsync(id);
 
             AssignDeveloperToTicketViewModel viewModel = new()
@@ -76,6 +76,7 @@ namespace StatTracker.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> AssignDev(AssignDeveloperToTicketViewModel viewModel)
         {
+            string? swalMessage = string.Empty;
             if (viewModel.DeveloperId != null)
             {
                 int companyId = User.Identity!.GetCompanyId();
@@ -85,10 +86,13 @@ namespace StatTracker.Controllers
                 try
                 {
                     await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperId, viewModel.Ticket!.Id!);
+                    swalMessage = "Sucess! The Developer has been assigned.";
                 }
                 catch (Exception)
                 {
                     ModelState.AddModelError("DeveloperId", "No Developer chosen. Please select a Developer.");
+
+                    swalMessage = "Error! The Developer was not assigned.";
 
                     throw;
                 }
@@ -102,13 +106,14 @@ namespace StatTracker.Controllers
 
                 Notification? notification = new()
                 {
-                    TicketId = viewModel.Ticket!.Id,
+                    TicketId = newTicket.Id,
                     Title = "Developer Assigned",
                     Message = $"Ticket: {viewModel.Ticket!.Title} was assigned by {btUser!.FullName}",
                     Created = DataUtility.GetPostGresDate(DateTime.Now),
                     SenderId = userId,
                     RecipientId = viewModel.DeveloperId,
-                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id
+                    NotificationTypeId = (await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == nameof(BTNotificationTypes.Ticket)))!.Id,
+                    ProjectId = newTicket.ProjectId,
                 };
 
                 await _notificationService.AddNotificationAsync(notification);
@@ -121,10 +126,10 @@ namespace StatTracker.Controllers
                 viewModel.DeveloperId = currentDev?.Id;
 
 
-                return RedirectToAction(nameof(Details), new { id = viewModel.Ticket?.Id });
             }
 
-            return View(viewModel);
+            return RedirectToAction(nameof(Details), new { id = viewModel.Ticket?.Id, swalMessage });
+            //return View(viewModel);
         }
 
         // GET: Tickets
@@ -146,7 +151,7 @@ namespace StatTracker.Controllers
         }
 
         // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? swalMessage = null)
         {
             if (id == null)
             {
@@ -163,6 +168,7 @@ namespace StatTracker.Controllers
                 return NotFound();
             }
 
+            ViewData["SwalMessage"] = swalMessage;
             return View(ticket);
         }
 
@@ -199,7 +205,7 @@ namespace StatTracker.Controllers
                 await _ticketService.AddTicketAsync(ticket);
                 int companyId = User.Identity!.GetCompanyId();
                 Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id, companyId);
-                
+
 
                 await _historyService.AddHistoryAsync(null, newTicket, userId);
 
@@ -217,7 +223,7 @@ namespace StatTracker.Controllers
                     ProjectId = ticket.ProjectId
                 };
 
-                if (projectManager != null )
+                if (projectManager != null)
                 {
                     await _notificationService.AddNotificationAsync(notification);
                     await _notificationService.SendEmailNotificationAsync(notification, "New Ticket Added");

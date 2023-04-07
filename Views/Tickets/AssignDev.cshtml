@@ -13,7 +13,7 @@
             <div class="card-title">@Model.Ticket?.Title</div>
         </div>
         <div class="card-body">
-            <form asp-action="AssignDeveloperToTicket" asp-controller="Tickets" method="post" class="d-flex flex-column">
+            <form asp-action="AssignDev" asp-controller="Tickets" method="post" class="d-flex flex-column">
                 <input type="hidden" asp-for="Ticket!.Id" />
                 <select asp-items="Model.DeveloperList" asp-for="DeveloperId">
                     <option value="">Unassigned</option>

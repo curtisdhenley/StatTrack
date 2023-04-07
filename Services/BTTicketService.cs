@@ -34,17 +34,23 @@ namespace StatTracker.Services
                 BTUser? currentDev = await GetDeveloperAsync(ticketId);
                 BTUser? selectedDev = await _context.Users.FindAsync(userId);
 
-                // Remove the current PM
+                // Remove the current Dev
                 if (currentDev != null)
                 {
                     await RemoveDeveloperAsync(ticketId);
                 }
 
-                // Add new/selected PM
+                // Add new/selected Dev
                 try
                 {
-                    Project? project = (await _projectService.GetProjectsAsync(selectedDev!.CompanyId)).FirstOrDefault();
-                    await _projectService.AddMemberToProjectAsync(selectedDev!, project!.Id);
+                    //Project? project = (await _projectService.GetProjectsAsync(selectedDev!.CompanyId)).FirstOrDefault();
+                    //await _rolesService.AddUserToRoleAsync(selectedDev!, nameof(BTRoles.Developer));
+                    //await _projectService.AddMemberToProjectAsync(selectedDev!, project!.Id);
+
+                    Ticket? ticket = await GetTicketAsNoTrackingAsync(ticketId, selectedDev!.CompanyId);
+
+                    ticket.DeveloperUserId = userId;
+
                     return true;
                 }
                 catch (Exception)
@@ -107,7 +113,7 @@ namespace StatTracker.Services
             {
                 Ticket? ticket = await _context.Tickets.Include(t => t.DeveloperUser).SingleOrDefaultAsync(t => t.Id == ticketId);
 
-                    if (await _rolesService.IsUserInRoleAsync(ticket!.DeveloperUser, nameof(BTRoles.Developer)))
+                    if (ticket!.DeveloperUser != null && await _rolesService.IsUserInRoleAsync(ticket!.DeveloperUser, nameof(BTRoles.Developer)))
                     {
                         return ticket.DeveloperUser!;
                     }

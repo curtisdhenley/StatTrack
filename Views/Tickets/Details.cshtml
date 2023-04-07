@@ -72,9 +72,9 @@
                             <div class="assign-team mt-3">
                                 <h5>Assigned to</h5>
                                 <div>
-                                    @foreach (BTUser member in Model.Project!.Members)
-                                    {
-                                        <a href="#"> <img class="rounded-circle avatar-sm" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.BTUserImage)" title="@member.FullName"> </a>
+                                    @if (Model.DeveloperUser != null)
+                                    {   
+                                    <a href="#"> <img class="rounded-circle avatar-sm" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(Model.DeveloperUser!.ImageFileData!, Model.DeveloperUser!.ImageFileType!, (int)DefaultImage.BTUserImage)" title="@Model.DeveloperUser!.FullName"> </a>
                                     }
                                     @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                                     {   
@@ -302,3 +302,27 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-purple waves-effect waves-light me-2">Edit</a>
     <a asp-action="Index" class="btn btn-outline-secondary waves-effect waves-light">Back to Tickets</a>
 </div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <!--Sweet Alerts-->
+    <script>
+        let message = '@(ViewBag.SwalMessage)';
+        if (!message.includes("Error") && message != '') {
+            Swal.fire({
+                backdrop: false,
+                icon: 'success',
+                title: message,
+                showConfirmButton: true
+            })
+        } else if (message.includes("Error")) {
+            Swal.fire({
+                backdrop: false,
+                icon: 'error',
+                title: 'Oops...',
+                text: message
+            })
+        }
+    </script>
+}
