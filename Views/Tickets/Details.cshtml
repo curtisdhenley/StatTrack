@@ -27,21 +27,41 @@
                                     <i class="mdi mdi-dots-vertical"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                    { 
+                                    <!-- delete -->
+                                    <a asp-action="Delete" asp-route-id="@Model?.Id" class="dropdown-item">Delete</a>
+                                    }
                                     <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Another action</a>
-                                    <!-- item-->
+                                    <a asp-action="Index" asp-controller="TicketHistories" class="dropdown-item">History</a>
+                                   @* <!-- item-->
                                     <a href="javascript:void(0);" class="dropdown-item">Something else</a>
                                     <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Separated link</a>
+                                    <a href="javascript:void(0);" class="dropdown-item">Separated link</a>*@
                                 </div>
                             </div>
                             <div class="d-flex mb-3">
                                 <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(Model!.Project!.ImageFileData!, Model!.Project!.ImageFileType!, (int)DefaultImage.ProjectImage)">
                                 <div class="flex-grow-1">
                                     <h4 class="media-heading mt-0">@Html.DisplayFor(model => model.Title)</h4>
-                                    <span class="badge bg-danger">@Html.DisplayFor(model => model.TicketPriority!.Name)</span>
+                                    <div>
+                                        @if (Model.TicketPriority?.Name == nameof(BTTicketPriorities.Urgent))
+                                        {
+                                            <span class="badge bg-danger font-13">@nameof(BTTicketPriorities.Urgent)</span>
+                                        }
+                                        else if (Model.TicketPriority?.Name == nameof(BTTicketPriorities.High))
+                                        {
+                                            <span class="badge bg-warning font-13">@nameof(BTTicketPriorities.High)</span>
+                                        }
+                                        else if (Model.TicketPriority?.Name == nameof(BTTicketPriorities.Medium))
+                                        {
+                                            <span class="badge bg-primary font-13">@nameof(BTTicketPriorities.Medium)</span>
+                                        }
+                                        else if (Model.TicketPriority?.Name == nameof(BTTicketPriorities.Low))
+                                        {
+                                            <span class="badge bg-success font-13">@nameof(BTTicketPriorities.Low)</span>
+                                        }
+                                    </div>
                                 </div>
                             </div>
 

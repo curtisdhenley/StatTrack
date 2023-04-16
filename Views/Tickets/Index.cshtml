@@ -18,18 +18,37 @@
     <a asp-action="Create" class="btn btn-purple rounded-pill">Create New</a>
     <a asp-action="unassignedTickets" class="btn btn-outline-secondary rounded-pill">Unassigned Tickets</a>
 </p>
-<div class="row">
+<div class="row rol-cols-3 g-3">
     @foreach (Ticket ticket in Model)
     {
         <div class="col-md-4">
-            <div class="card h-99 mt-3">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h4 class="card-title">
+                    <div class="float-end">
+                        @if (ticket.TicketPriority?.Name == nameof(BTTicketPriorities.Urgent))
+                        {
+                            <span class="badge bg-danger font-13">@nameof(BTTicketPriorities.Urgent)</span>
+                        }
+                        else if (ticket.TicketPriority?.Name == nameof(BTTicketPriorities.High))
+                        {
+                            <span class="badge bg-warning font-13">@nameof(BTTicketPriorities.High)</span>
+                        }
+                        else if (ticket.TicketPriority?.Name == nameof(BTTicketPriorities.Medium))
+                        {
+                            <span class="badge bg-primary font-13">@nameof(BTTicketPriorities.Medium)</span>
+                        }
+                        else if (ticket.TicketPriority?.Name == nameof(BTTicketPriorities.Low))
+                        {
+                            <span class="badge bg-success font-13">@nameof(BTTicketPriorities.Low)</span>
+                        }
+                    </div>
+                    <h4 class="card-title fs-3">
                         <strong>Issue:</strong> <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
                     </h4>
-                    <p class="card-text" style="overflow-y:auto;height:100px;">
+                    <hr>
+                    @*<p class="card-text" style="overflow-y:auto;height:100px;">
                         <strong>Details:</strong> @Html.DisplayFor(modelItem => ticket.Project!.Description)
-                    </p>
+                    </p>*@
                     <p class="card-text">
                         <strong>Priority Level:</strong> @Html.DisplayFor(modelItem => ticket.TicketPriority!.Name)
                     </p>

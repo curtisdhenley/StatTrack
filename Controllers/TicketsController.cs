@@ -77,15 +77,21 @@ namespace StatTracker.Controllers
         public async Task<IActionResult> AssignDev(AssignDeveloperToTicketViewModel viewModel)
         {
             string? swalMessage = string.Empty;
+            int companyId = User.Identity!.GetCompanyId();
+            Ticket? ticket = await _ticketService.GetTicketAsNoTrackingAsync(viewModel.Ticket!.Id, companyId);
+
             if (viewModel.DeveloperId != null)
             {
-                int companyId = User.Identity!.GetCompanyId();
-
                 Ticket? oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(viewModel.Ticket?.Id, companyId);
 
                 try
                 {
-                    await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperId, viewModel.Ticket!.Id!);
+                    //await _ticketService.AddDeveloperToTicketAsync(viewModel.DeveloperId, viewModel.Ticket!.Id!);
+
+                    ticket!.DeveloperUserId = viewModel.DeveloperId;
+
+                    _context.Tickets.Update(ticket);
+                    await _context.SaveChangesAsync();
                     swalMessage = "Sucess! The Developer has been assigned.";
                 }
                 catch (Exception)
