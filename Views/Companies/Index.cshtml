@@ -42,7 +42,6 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <a asp-action="Create" asp-controller="Invites" asp-route-id="@Model.Id" class="dropdown-item">Invite Members</a>
-                        <a asp-action="ManageUserRoles" asp-controller="Companies" asp-route-id="@Model.Id" class="dropdown-item">Manage Members</a>
                     </div>
                 </div>
                 <!-- Company Members -->
@@ -53,7 +52,7 @@
                     <li class="list-group-item">
                         <a href="#" class="user-list-item">
                             <div class="user avatar-sm float-start me-2">
-                                    <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.ProjectImage)">
+                                    <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64" src="@_btFileService.ConvertByteArrayToFile(member!.ImageFileData!, member!.ImageFileType!, (int)DefaultImage.BTUserImage)">
                             </div>
                             <div class="user-desc">
                                 <h5 class="name mt-0 mb-1">@member.FullName</h5>
@@ -83,8 +82,11 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <a asp-action="Index" asp-controller="Projects" asp-route-id="@Model.Id" class="dropdown-item">Projects</a>
+                        @if (User.IsInRole(nameof(BTRoles.Admin)))
+                        {   
                         <!-- item-->
                         <a asp-action="Create" asp-controller="Projects" asp-route-id="@Model.Id" class="dropdown-item">Create a new Project</a>
+                        }
                     </div>
                 </div>
 

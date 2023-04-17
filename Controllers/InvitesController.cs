@@ -79,7 +79,7 @@ namespace StatTracker.Controllers
             return View();
         }
 
-        // POST: Invites/AddTicketComment
+        // POST: Invites
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -87,6 +87,8 @@ namespace StatTracker.Controllers
         public async Task<IActionResult> Create([Bind("Id,ProjectId,InvitorId,InviteeEmail,InviteeFirstName,InviteeLastName,Message")] Invite invite)
         {
             ModelState.Remove("InvitorId");
+
+            //string? swalMessage = string.Empty;
 
             int companyId = User.Identity!.GetCompanyId();
 
@@ -103,7 +105,7 @@ namespace StatTracker.Controllers
                     string? callbackUrl = Url.Action("ProcessInvite", "Invites", new { token, email, company }, protocol: Request.Scheme);
 
                     string? body = $@"{invite.Message} <br />
-                        Please join my Compnay. <br />
+                        Please join my Company. <br />
                         Click the following link to join our team. <br />
                         <a href=""{callbackUrl}"">COLLABERATE</a>";
 
@@ -124,14 +126,13 @@ namespace StatTracker.Controllers
 
                     await _inviteService.AddNewInviteAsync(invite);
 
-                    return RedirectToAction("AdmintoIndex", "Home");
+                    //swalMessage = "Sucess! The invite has been sent.";
 
-                    // TODO: SWAL for "invite sent"
 
                 }
                 catch (Exception)
                 {
-
+                    //swalMessage = "Error! The invite was not sent.";
                     throw;
                 }
 
@@ -139,7 +140,8 @@ namespace StatTracker.Controllers
             }
 
             ViewData["ProjectId"] = new SelectList(await _projectService.GetProjectsAsync(companyId), "Id", "Description");
-            return View(invite);
+            return RedirectToAction("Index", "Companies");
+            //return View(invite);
         }
 
         [HttpGet]

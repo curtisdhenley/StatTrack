@@ -440,13 +440,15 @@ namespace StatTracker.Controllers
         {
             string statusMessage;
 
+            ModelState.Remove("BTUserId");
+
             if (ModelState.IsValid && ticketAttachment.FormFile != null)
             {
                 ticketAttachment.FileData = await _fileService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
                 ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
                 ticketAttachment.FileType = ticketAttachment.FormFile.ContentType;
 
-                ticketAttachment.Created = DateTime.Now;
+                ticketAttachment.Created = DataUtility.GetPostGresDate(DateTime.Now);
                 ticketAttachment.BTUserId = _userManager.GetUserId(User);
 
                 await _ticketService.AddTicketAttachmentAsync(ticketAttachment);

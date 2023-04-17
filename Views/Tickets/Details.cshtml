@@ -17,7 +17,7 @@
 <div>
     <div classxfont-weighteighteightgetainer-fluid">
         <div class="row row-cols-2">
-                <!-- Ticket Details -->
+            <!-- Ticket Details -->
             <div class="col-md-8 col">
                 <div class="col">
                     <div class="card">
@@ -28,13 +28,14 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                    { 
-                                    <!-- delete -->
-                                    <a asp-action="Delete" asp-route-id="@Model?.Id" class="dropdown-item">Delete</a>
+                                    {
+                                        <!-- delete -->
+                                        <a asp-action="Delete" asp-route-id="@Model?.Id" class="dropdown-item">Delete</a>
                                     }
                                     <!-- item-->
                                     <a asp-action="Index" asp-controller="TicketHistories" class="dropdown-item">History</a>
-                                   @* <!-- item-->
+                                    <a asp-action="Index" asp-controller="TicketAttachments" class="dropdown-item">Attachments</a>
+                                    @* <!-- item-->
                                     <a href="javascript:void(0);" class="dropdown-item">Something else</a>
                                     <!-- item-->
                                     <a href="javascript:void(0);" class="dropdown-item">Separated link</a>*@
@@ -93,52 +94,15 @@
                                 <h5>Assigned to</h5>
                                 <div>
                                     @if (Model.DeveloperUser != null)
-                                    {   
-                                    <a href="#"> <img class="rounded-circle avatar-sm" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(Model.DeveloperUser!.ImageFileData!, Model.DeveloperUser!.ImageFileType!, (int)DefaultImage.BTUserImage)" title="@Model.DeveloperUser!.FullName"> </a>
+                                    {
+                                        <a href="#"> <img class="rounded-circle avatar-sm" alt="64x64" src="@BTFileService.ConvertByteArrayToFile(Model.DeveloperUser!.ImageFileData!, Model.DeveloperUser!.ImageFileType!, (int)DefaultImage.BTUserImage)" title="@Model.DeveloperUser!.FullName"> </a>
                                     }
                                     @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                    {   
-                                    <a asp-action="AssignDev" asp-controller="Tickets" asp-route-id="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign A Developer"><span class="add-new-plus"><i class="mdi mdi-plus"></i> </span></a>
+                                    {
+                                        <a asp-action="AssignDev" asp-controller="Tickets" asp-route-id="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign A Developer"><span class="add-new-plus"><i class="mdi mdi-plus"></i> </span></a>
                                     }
                                 </div>
                             </div>
-                            @* TODO: get ticket attachments working ==================== *@
-                            @*<div class="attached-files mt-3">
-                            <h5>Attached Files </h5>
-                            <ul class="list-inline files-list">
-                            <li class="list-inline-item file-box">
-                            <a href=""><img src="assets/images/attached-files/img-1.jpg" class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
-                            <p class="font-13 mb-1 text-muted"><small>File one</small></p>
-                            </li>
-                            <li class="list-inline-item file-box">
-                            <a href=""><img src="assets/images/attached-files/img-2.jpg" class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
-                            <p class="font-13 mb-1 text-muted"><small>Attached-2</small></p>
-                            </li>
-                            <li class="list-inline-item file-box">
-                            <a href=""><img src="assets/images/attached-files/img-3.jpg" class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
-                            <p class="font-13 mb-1 text-muted"><small>Dribbble shot</small></p>
-                            </li>
-                            <li class="list-inline-item file-box ms-2">
-                            <div class="fileupload add-new-plus">
-                            <span><i class="mdi-plus mdi"></i></span>
-                            <input type="file" class="upload">
-                            </div>
-                            </li>
-                            </ul>
-                            <div class="row">
-                            <div class="col-sm-12">
-                            <div class="text-end">
-                            <button type="submit" class="btn btn-success waves-effect waves-light me-1">
-                            Save
-                            </button>
-                            <button type="button"
-                            class="btn btn-light waves-effect">
-                            Cancel
-                            </button>
-                            </div>
-                            </div>
-                            </div>
-                            </div>*@
 
                         </div>
                     </div>
@@ -240,43 +204,34 @@
                          </div>
                          </div>* -->
                 <!-- Ticket Attachment -->
+                <!--Start Attachments-->
                 <div class="col">
                     <div class="card">
-                        <div class="card-body" style="overflow-y:auto;height:300px;">
-                            <h2>Attachments</h2>
-                            @* TODO: get ticket attachments working ================ *@
-
-                            @* Refer to the Ticket Attachments document for this section *@
-
-                            @* Ticket attachments part 1 here *@
-                            <div class="row clearfix">
-                                <div>
-                                    <form asp-action="AddTicketAttachment" asp-controller="Tickets" enctype="multipart/form-data" method="post">
-                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                        <input type="hidden" asp-for="@Model.Id" name="TicketId">
-                                        <div class="media-body ml-3">
-                                            <label>
-                                                Description
-                                                <input asp-for="@Model.Attachments.FirstOrDefault()!.Description" type="text" class="form-control" />
-                                            </label><br />
-                                            <label class="btn btn-outline-primary btn-sm">
-                                                <input asp-for="@Model.Attachments.FirstOrDefault()!.FormFile" type="file" class="form-control-file" />
-                                            </label>
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-
-                            @* Ticket attachments part 2 here *@
+                        <div class="card-body" style="height: 500px; overflow-y:auto">
+                            <h3>Add File </h3>
                             <hr />
-                            <h6>Attachments</h6>
-                            <div class="container">
-                                <div class="row">
+                            <ul class="list-inline files-list">
+                                <form asp-action="AddTicketAttachment" asp-controller="Tickets" enctype="multipart/form-data" method="post">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="@Model.Id" name="TicketId">
+                                    <div class="media-body ml-3 mb-2 float">
+                                        <label class="mb-1 w-100">
+                                            Description
+                                            <input asp-for="@Model.Attachments.FirstOrDefault()!.Description" type="text" class="form-control" />
+                                        </label>
+                                        <br />
+                                        <label>
+                                            <input asp-for="@Model.Attachments.FirstOrDefault()!.FormFile" type="file" class="form-control-file" />
+                                        </label>
+                                    </div>
+                                    <div class="float text-end">
+                                        <button type="submit" class="btn btn-outline-info rounded-pill md-btn-flat">Submit</button>
+                                    </div>
+                                    <h5 class="mt-3">Attached Files </h5>
+                                    <hr />
                                     @foreach (TicketAttachment item in Model.Attachments)
                                     {
-                                        <div class="col col-sm-2">
+                                        <li class="list-inline-item file-box">
                                             <a asp-action="ShowFile" asp-controller="Tickets" asp-route-Id="@item.Id">
                                                 <div class="icon">
                                                     <img src="@BTFileService.GetFileIcon(item.FileName!)" style="height:50px;width:50px" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="@item.FileName" />
@@ -286,16 +241,19 @@
                                                 <div class="file-name">
                                                     <strong>@item.Description</strong>
                                                 </div>
-                                                <small>Size: @BTFileService.FormatFileSize(item.FileData!.Length) </small>
+                                                <p class="font-13 mb-1 text-muted"><small>Size: @BTFileService.FormatFileSize(item.FileData!.Length) </small></p>
                                             </div>
-                                        </div>
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                <div> <a asp-action="Delete" asp-controller="TicketAttachments" asp-route-id="@item.Id" class="badge bg-danger float-start"><i class="mdi mdi-archive"></i> </a> </div>
+                                                }
+                                        </li>
                                     }
-                                </div>
-                            </div>
-
+                                </form>
+                            </ul>
                         </div>
-                    </div>
-                </div>
+                    </div> <!-- end card-body-->
+                </div> <!--End Attachments-->
                 <!-- Ticket History -->
                 <div class="col">
                     <div class="card">
