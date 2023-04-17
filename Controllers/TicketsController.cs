@@ -179,18 +179,21 @@ namespace StatTracker.Controllers
         }
 
         // GET: Tickets
-        public IActionResult Create()
-        {
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description");
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "FullName");
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-            return View();
+        public async Task<IActionResult> Create() 
+        { 
+            int companyId = User.Identity!.GetCompanyId(); 
+            
+            ViewData["DeveloperUserId"] = new SelectList(_context.Set<BTUser>(), "Id", "Id"); 
+            ViewData["ProjectId"] = new SelectList(await _projectService.GetProjectsAsync(companyId), "Id", "Name"); 
+            ViewData["SubmitterUserId"] = new SelectList(_context.Set<BTUser>(), "Id", "Id"); 
+            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name"); 
+            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name"); 
+            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name"); 
+            
+            return View(); 
         }
 
-        // POST: Tickets/AddTicketComment
+        // POST: Tickets
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -200,6 +203,8 @@ namespace StatTracker.Controllers
             BTUser? btUser = await _userManager.GetUserAsync(User);
 
             ModelState.Remove("SubmitterUserId");
+            ModelState.Remove("Created"); 
+            ModelState.Remove("Id");
 
             if (ModelState.IsValid)
             {

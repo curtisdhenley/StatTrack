@@ -1,19 +1,45 @@
 ﻿@page
 @model ConfirmEmailModel
+
 @{
     ViewData["Title"] = "Confirm email";
+    Layout = "_LoginLayout";
 }
 
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-lg-6 col-xl-4">
+            <div class="text-center w-75 m-auto">
+                <a href="index.html" class="logo logo-light text-center">
+                    <span class="logo-lg"> <img src="~/img/logos/stat-track-high-resolution-logo-color-on-transparent-background.png" alt="" height="45"> </span>
+                </a>
+                <p class="text-muted mt-2 mb-4"></p>
+            </div>
+            <div class="card bg-pattern">
+                <div class="card-body p-4"> </div>
+                <div class="text-center">
+                    <div class="mt-4">
+                        <div class="logout-checkmark">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                <circle class="path circle" fill="none" stroke="#4bd396" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                                <polyline class="path check" fill="none" stroke="#4bd396" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                            </svg>
+                        </div>
+                    </div>
+                    <h3>Thank you for confirming your email!</h3>
+                    <p class="text-muted"></p>
+                    <div class="row mt-3">
+                        <div class="d-grid gap-2 col-6 mx-auto mb-3">
+                            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-lg btn-primary mt-2">Login</a>
+                        </div> <!-- end col -->
 
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+                    </div> <!-- end row -->
 
-<div class="card">
-    <div class="header">
-        <p class="lead">@ViewData["Title"]</p>
-    </div>
-    <div class="body">
-        <a class="btn btn-primary btn-lg btn-block" asp-area="Identity" asp-page="/Account/Login">
-            <i class="fa fa-sign-in"><span>SIGN IN</span></i>
-        </a>
-    </div>
-</div>
+                </div>
+            </div> <!-- end card-body -->
+
+        </div> <!-- end card -->
+
+    </div> <!-- end col -->
+
+</div><!-- end row -->

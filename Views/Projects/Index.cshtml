@@ -19,11 +19,12 @@
     BTUser? btUser = await _UserManager.GetUserAsync(User);
 }
 
-@if ((await _btRoleService.GetUserRolesAsync(btUser)).FirstOrDefault() == nameof(BTRoles.Admin))
+@if (User.IsInRole(nameof(BTRoles.Admin)))
 {
     <div class="row">
         <div class="col-sm-4">
             <a asp-controller="Projects" asp-action="Create" class="btn btn-purple rounded-pill w-md waves-effect waves-light mb-3"><i class="mdi mdi-plus"></i> Create Project</a>
+            <a asp-controller="Invites" asp-action="Create" class="btn btn-purple rounded-pill w-md waves-effect waves-light mb-3"><i class="mdi mdi-plus"></i> Invite Member</a>
         </div>
     </div>
     <!-- end row -->
@@ -78,7 +79,7 @@
                                     <img src="@_btFileService.ConvertByteArrayToFile(project.ImageFileData!, project.ImageFileType!, (int)DefaultImage.BTUserImage)" alt="Post Images" class="rounded-circle avatar-sm" />
                                 </a>
                             }
-                            @if (User.IsInRole("Admin"))
+                            @if (User.IsInRole(nameof(BTRoles.Admin)))
                             {
                                 <a asp-action="AssignProjectMembers" asp-route-id="@project.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Assign a new member">
                                     <span class="add-new-plus"><i class="mdi mdi-plus"></i></span>

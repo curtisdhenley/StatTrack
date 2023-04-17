@@ -152,14 +152,18 @@ namespace StatTracker.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.TicketComment'  is null.");
             }
-            var ticketComment = await _context.TicketComments.FindAsync(id);
+
+            TicketComment? ticketComment = await _context.TicketComments.FindAsync(id);
+
+            int ticketId = ticketComment!.TicketId;
+
             if (ticketComment != null)
             {
                 _context.TicketComments.Remove(ticketComment);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "Tickets", new { id = ticketId });
         }
 
         private bool TicketCommentExists(int id)

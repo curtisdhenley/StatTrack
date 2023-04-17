@@ -24,18 +24,26 @@ namespace StatTracker.Controllers
         private readonly IBTInviteService _inviteService;
         private readonly IBTProjectService _projectService;
         private readonly IBTCompanyService _companyService;
-        private readonly IEmailSender _emailService;
+        private readonly IEmailSender _emailSender;
         private readonly IDataProtector _dataProtector;
         private readonly UserManager<BTUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public InvitesController(ApplicationDbContext context, IBTInviteService inviteService, IBTProjectService projectService, IBTCompanyService companyService, IEmailSender emailService, UserManager<BTUser> userManager, IDataProtectionProvider dataProtectionProvider, IConfiguration configuration)
+        public InvitesController(
+            ApplicationDbContext context, 
+            IBTInviteService inviteService, 
+            IBTProjectService projectService, 
+            IBTCompanyService companyService, 
+            IEmailSender emailSender, 
+            UserManager<BTUser> userManager, 
+            IDataProtectionProvider dataProtectionProvider, 
+            IConfiguration configuration)
         {
             _context = context;
             _inviteService = inviteService;
             _projectService = projectService;
             _companyService = companyService;
-            _emailService = emailService;
+            _emailSender = emailSender;
             _userManager = userManager;
             _configuration = configuration;
             _dataProtector = dataProtectionProvider.CreateProtector(configuration.GetValue<string>("ProtectKey")! ?? Environment.GetEnvironmentVariable("ProtectKey")!);
@@ -70,12 +78,13 @@ namespace StatTracker.Controllers
             return View(invite);
         }
 
-        // GET: Invites/AddTicketComment
-        public async Task<IActionResult> Create()
+        // GET: Invites
+        public async Task<IActionResult> Create(string? swalMessage = null)
         {
             int companyId = User.Identity!.GetCompanyId();
 
             ViewData["ProjectId"] = new SelectList(await _projectService.GetProjectsAsync(companyId), "Id", "Description");
+            ViewData["SwalMessage"] = swalMessage;
             return View();
         }
 
@@ -88,7 +97,7 @@ namespace StatTracker.Controllers
         {
             ModelState.Remove("InvitorId");
 
-            //string? swalMessage = string.Empty;
+            string? swalMessage = string.Empty;
 
             int companyId = User.Identity!.GetCompanyId();
 
@@ -113,9 +122,9 @@ namespace StatTracker.Controllers
 
                     Company? btCompany = await _companyService.GetCompanyInfoAsync(companyId);
 
-                    string? subject = $@"StatTrak: {btCompany.Name} Invite";
+                    string? subject = $@"StatTrack: {btCompany.Name} Invite";
 
-                    await _emailService.SendEmailAsync(destination!, subject, body);
+                    await _emailSender.SendEmailAsync(destination!, subject, body);
 
                     // Save invite in the DB
                     invite.CompanyToken = guid;
@@ -126,13 +135,13 @@ namespace StatTracker.Controllers
 
                     await _inviteService.AddNewInviteAsync(invite);
 
-                    //swalMessage = "Sucess! The invite has been sent.";
+                    swalMessage = "Sucess! The invite has been sent.";
 
 
                 }
                 catch (Exception)
                 {
-                    //swalMessage = "Error! The invite was not sent.";
+                    swalMessage = "Error! The invite was not sent.";
                     throw;
                 }
 
@@ -140,7 +149,7 @@ namespace StatTracker.Controllers
             }
 
             ViewData["ProjectId"] = new SelectList(await _projectService.GetProjectsAsync(companyId), "Id", "Description");
-            return RedirectToAction("Index", "Companies");
+            return RedirectToAction(nameof(Create), new { swalMessage });
             //return View(invite);
         }
 

@@ -1,23 +1,32 @@
 ﻿@page
 @model RegisterConfirmationModel
+
 @{
     ViewData["Title"] = "Register confirmation";
+    Layout = "_LoginLayout";
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
-    }
-}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-4 mt-5">
+            <div class="text-center mt-5 mb-2">
+                <a asp-action="LandingPage" asp-controller="Home">
+                    <img src="~/img/logos/stat-track-high-resolution-logo-color-on-transparent-background.png" alt="" height="45">
+                </a>
+                <p class="text-muted mt-2 mb-4"></p>
+            </div>
+            <div class="card text-center">
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h4 class="text-uppercase mt-0">Confirm Email</h4>
+                    </div>
+                    <img src="~/Adminto_Template/dist/assets/images/mail_confirm.png" alt="img" width="86" class="mx-auto d-block" />
+                    <p class="text-muted font-14 mt-2"> Please check your email to confirm your account. </p>
+                </div> <!-- end card-body -->
 
+            </div> <!-- end card -->
+
+        </div> <!-- end col -->
+
+    </div> <!-- end row -->
+</div>

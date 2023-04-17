@@ -328,7 +328,7 @@ namespace StatTracker.Controllers
         {
             int companyId = User.Identity!.GetCompanyId();
 
-            if (_projectService.GetProjectAsync(id, companyId) == null)
+            if (await _projectService.GetProjectAsync(id, companyId) == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }

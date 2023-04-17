@@ -23,7 +23,7 @@
                 </div>
                 <div class="row row-xs align-items-center mg-b-20 mb-3">
                     <div class="col-md-4">
-                        <label class="mg-b-0">Firstname</label>
+                        <label class="mg-b-0">First Name</label>
                     </div>
                     <div class="col-md-8 mg-t-5 mg-md-t-0">
                         <input type="text" asp-for="InviteeFirstName" class="form-control" placeholder="Enter first name">
@@ -31,7 +31,7 @@
                 </div>
                 <div class="row row-xs align-items-center mg-b-20 mb-3">
                     <div class="col-md-4">
-                        <label class="mg-b-0">Lastname</label>
+                        <label class="mg-b-0">Last Name</label>
                     </div>
                     <div class="col-md-8 mg-t-5 mg-md-t-0">
                         <input type="text" asp-for="InviteeLastName" class="form-control" placeholder="Enter last name">
@@ -66,10 +66,28 @@
     </div>
 </div>
 <div>
-    <a asp-action="Index" asp-controller="Companies" class="btn btn-outline-secondary">Back to List</a>
+    <a asp-action="Index" asp-controller="Projects" class="btn btn-outline-secondary">Back to Projects</a>
 </div>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <!--Sweet Alerts-->
+    <script>
+        let message = '@(ViewBag.SwalMessage)';
+        if (!message.includes("Error") && message != '') {
+            Swal.fire({
+                backdrop: false,
+                icon: 'success',
+                title: message,
+                showConfirmButton: true
+            })
+        } else if (message.includes("Error")) {
+            Swal.fire({
+                backdrop: false,
+                icon: 'error',
+                title: 'Oops...',
+                text: message
+            })
+        }
+    </script>
 }

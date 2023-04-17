@@ -44,8 +44,7 @@ namespace StatTracker.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IBTProjectService btProjectService,
-            IBTInviteService inviteService,
-            EmailService emailService)
+            IBTInviteService inviteService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -55,7 +54,6 @@ namespace StatTracker.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _projectService = btProjectService;
             _inviteService = inviteService;
-            _emailService = emailService;
         }
 
         /// <summary>
