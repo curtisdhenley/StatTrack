@@ -125,15 +125,15 @@
                 </form>
                 </li>*@
 
-               @* <li class="dropdown d-inline-block d-lg-none">
-                    <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="fe-search noti-icon"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-lg dropdown-menu-end p-0">
-                        <form class="p-3">
-                            <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
-                        </form>
-                    </div>
+                @* <li class="dropdown d-inline-block d-lg-none">
+                <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                <i class="fe-search noti-icon"></i>
+                </a>
+                <div class="dropdown-menu dropdown-lg dropdown-menu-end p-0">
+                <form class="p-3">
+                <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                </form>
+                </div>
                 </li>*@
 
                 @*<li class="dropdown notification-list topbar-dropdown">
@@ -264,9 +264,9 @@
                 </li>
 
                 @*<li class="dropdown notification-list">
-                    <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">
-                        <i class="fe-settings noti-icon"></i>
-                    </a>
+                <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">
+                <i class="fe-settings noti-icon"></i>
+                </a>
                 </li>*@
 
             </ul>
@@ -347,190 +347,123 @@
                 <!--- Sidemenu -->
                 <div id="sidebar-menu">
 
-                    <div id="side-menu">
+                    <ul id="side-menu">
 
-                        <h2 class="menu-title text-center fs-3">Navigation</h2>
+                        <li class="menu-title">Navigation</li>
 
-                        <div class="dropdown text-center fs-4">
-                            <a class="dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="mdi mdi-menu"></span>
-                                Main Menu
-                                <span class="mdi mdi-chevron-down"></span>
+                        <li>
+                            <a asp-controller="Home" asp-action="Dashboard">
+                                <i class="mdi mdi-view-dashboard-outline"></i>
+                                <span> Dashboard </span>
                             </a>
+                        </li>
 
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="Dashboard">
-                                        Dashboard
-                                        <span class="mdi mdi-chevron-right"></span>
-                                    </a>
-                                </li>
-                               @* <li>
-                                    <a class="dropdown-item" asp-controller="Companies" asp-action="Index">
-                                        Company Overview
-                                        <span class="mdi mdi-chevron-right"></span>
-                                    </a>
-                                </li>*@
-                            </ul>
-                        </div>
-
-                        <div class="dropdown text-center fs-4">
-                            <a class="dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="mdi mdi-folder"></span>
-                                Projects
-                                <span class="mdi mdi-chevron-down"></span>
+                        <li>
+                            <a href="#project" data-bs-toggle="collapse">
+                                <i class="mdi mdi-folder"></i>
+                                <span> Projects </span>
+                                <span class="menu-arrow"></span>
                             </a>
-
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Projects" asp-action="Index">
-                                        Projects Overview
-                                        <span class="mdi mdi-chevron-right"></span>
-                                    </a>
-                                </li>
-                                @if (userRole == nameof(BTRoles.Admin))
-                                {
+                            <div class="collapse" id="project">
+                                <ul class="nav-second-level">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Projects" asp-action="Create">
-                                            Create New Project
-                                            <span class="mdi mdi-chevron-right"></span>
-                                        </a>
+                                        <a asp-controller="Projects" asp-action="Index">Projects Overview</a>
                                     </li>
-                                }
-                            </ul>
-                        </div>
-
-                        <div class="dropdown text-center fs-4">
-                            <a class="dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="mdi mdi-file-account-outline"></span>
-                                Tickets
-                                <span class="mdi mdi-chevron-down"></span>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Tickets" asp-action="Index">
-                                        Tickets Overview
-                                        <span class="mdi mdi-chevron-right"></span>
-                                    </a>
-                                </li>
-                                @if (userRole == nameof(BTRoles.Admin) || userRole == nameof(BTRoles.ProjectManager))
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Tickets" asp-action="Create">
-                                            Create New Ticket
-                                            <span class="mdi mdi-chevron-right"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="unassignedTickets" asp-controller="Tickets">
-                                            Unassigned Tickets
-                                            <span class="mdi mdi-chevron-right"></span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-
-                     @*   <ul id="side-menu">
-
-                            <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                Link with href
-                            </a>
-
-
-
-                            <li>
-                                <a asp-controller="Home" asp-action="Dashboard" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <i class="mdi mdi-view-dashboard-outline"></i>
-                                    <span> Dashboard </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-controller="Projects" asp-action="Index">
-                                    <i class="mdi mdi-view-dashboard-outline"></i>
-                                    <span class="badge bg-success rounded-pill float-end">9+</span>
-                                    <span> Projects </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-controller="Companies" asp-action="Index">
-                                    <i class="mdi mdi-view-dashboard-outline"></i>
-                                    <span class="badge bg-success rounded-pill float-end">9+</span>
-                                    <span> Companies </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-controller="Tickets" asp-action="Index">
-                                    <i class="mdi mdi-view-dashboard-outline"></i>
-                                    <span class="badge bg-success rounded-pill float-end">9+</span>
-                                    <span> Tickets </span>
-                                </a>
-                            </li>
-                        </ul>*@
-                    </div>
-                </div>
-                <!-- End Sidebar -->
-
-                <div class="clearfix"></div>
-
-            </div>
-            <!-- Sidebar -left -->
-
-        </div>
-        <!-- Left Sidebar End -->
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
-
-        <div class="content-page">
-            <div class="content">
-
-                <!-- Start Content-->
-                <div class="container-fluid">
-
-                    @RenderBody()
-
-                </div> <!-- container-fluid -->
-
-            </div> <!-- content -->
-            <!-- Footer Start -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <script>document.write(new Date().getFullYear())</script>
-                            &copy; StatTrack by
-                            <a href="https://curtishenley.dev/" target="_blank" class="text-decoration-none">
-                                <strong class="hero-name">
-                                    Curtis Henley
-                                </strong>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="text-md-end footer-links d-none d-sm-block">
-                                <a target="_blank" href="https://curtishenley.dev/" class="social-icons">
-                                    <i class="bi bi-envelope-at p-2"></i>
-                                </a>
-                                <a target="_blank" href="https://www.linkedin.com/in/curtisdhenley/" class="social-icons">
-                                    <i class="bi bi-linkedin p-2"></i>
-                                </a>
-                                <a target="_blank" href="https://github.com/curtisdhenley?tab=repositories"
-                                   class="social-icons"><i class="bi bi-github p-2"></i></a>
+                                    @if (userRole == nameof(BTRoles.Admin))
+                                    {
+                                        <li>
+                                            <a asp-controller="Projects" asp-action="Create">Create A New Project</a>
+                                        </li>
+                                    }
+                                </ul>
                             </div>
+                        </li>
+
+                        <li>
+                            <a href="#ticket" data-bs-toggle="collapse">
+                                <i class="mdi mdi-file-account-outline"></i>
+                                <span> Tickets </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="ticket">
+                                <ul class="nav-second-level">
+                                    <li>
+                                        <a asp-controller="Tickets" asp-action="Index">Tickets Overview</a>
+                                    </li>
+                                    @if (userRole == nameof(BTRoles.Admin) || userRole == nameof(BTRoles.ProjectManager))
+                                    {
+                                        <li>
+                                            <a asp-controller="Tickets" asp-action="Create">Create A New Ticket</a>
+                                        </li>
+                                        <li>
+                                            <a asp-action="unassignedTickets" asp-controller="Tickets">Unassigned Tickets</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End Sidebar -->
+
+            <div class="clearfix"></div>
+
+        </div>
+        <!-- Sidebar -left -->
+
+    </div>
+    <!-- Left Sidebar End -->
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                @RenderBody()
+
+            </div> <!-- container-fluid -->
+
+        </div> <!-- content -->
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        &copy; StatTrack by
+                        <a href="https://curtishenley.dev/" target="_blank" class="text-decoration-none">
+                            <strong class="hero-name">
+                                Curtis Henley
+                            </strong>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-md-end footer-links d-none d-sm-block">
+                            <a target="_blank" href="https://curtishenley.dev/" class="social-icons">
+                                <i class="bi bi-envelope-at p-2"></i>
+                            </a>
+                            <a target="_blank" href="https://www.linkedin.com/in/curtisdhenley/" class="social-icons">
+                                <i class="bi bi-linkedin p-2"></i>
+                            </a>
+                            <a target="_blank" href="https://github.com/curtisdhenley?tab=repositories"
+                               class="social-icons"><i class="bi bi-github p-2"></i></a>
                         </div>
                     </div>
                 </div>
-            </footer>
-            <!-- end Footer -->
+            </div>
+        </footer>
+        <!-- end Footer -->
 
 
-        </div>
-        <!-- ============================================================== -->
-        <!-- End Page content -->
-        <!-- ============================================================== -->
-
-
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
     </div>
     <!-- END wrapper -->
     <!-- Right Sidebar -->
