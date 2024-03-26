@@ -21,9 +21,9 @@ StatTrack is a robust, secure, and multi-tenant issue tracking system developed 
 - **Frontend**: Razor Pages, HTML, CSS, JS
 - **Development Tools**: Visual Studio 2022, PG Admin
 
-  ## Live App Demo
+## Live App Demo
 
-    **View the app here**: [StatTrack Demo](https://stattrack-production.up.railway.app/)
+- **View the app here**: [StatTrack Demo](https://stattrack-production.up.railway.app/)
 
 ## How to Use
 
